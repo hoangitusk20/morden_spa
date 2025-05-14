@@ -14,8 +14,8 @@ const CoreFeature = () => {
           Indulge in our carefully curated treatments designed to provide the
           ultimate relaxation and rejuvenation experience.
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-15">
-          {services.map((service) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 mt-15">
+          {services.slice(0, 4).map((service) => (
             <ServiceCard service={service} key={service.id} />
           ))}
         </div>

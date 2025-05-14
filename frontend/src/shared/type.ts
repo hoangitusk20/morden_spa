@@ -6,5 +6,6 @@ export interface Service {
     image: string;
     description: string;
     detailDescription: string;
+    category:string;
   }
   

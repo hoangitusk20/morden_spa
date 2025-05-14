@@ -1,6 +1,6 @@
 // components/ServiceCard.tsx
 import React from "react";
-import { Service } from "./type"; // Đường dẫn có thể tuỳ theo project
+import { Service } from "./type";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -34,12 +34,12 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
             ${service.price}
           </span>
         </div>
-        <p className="py-4 text-md text-gray-600 line-clamp-3 overflow-hidden text-ellipsis">
+        <p className="py-4 text-md text-gray-600 line-clamp-3 h-[5.5rem] overflow-hidden text-ellipsis">
           {service.description}
         </p>
         <Link
           href={`/services/${service.id}`}
-          className="py-2 px-4 hover:bg-primary hover:text-white rounded-lg flex md:inline-flex justify-center md:justify-start"
+          className="py-2 mt-2 px-4 hover:bg-primary hover:text-white rounded-lg flex md:inline-flex justify-center md:justify-start"
         >
           <span className="mr-2">Learn more</span>
           <ArrowRight className="group-hover:ml-2  " />
