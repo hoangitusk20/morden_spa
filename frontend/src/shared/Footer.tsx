@@ -9,7 +9,7 @@ const navLinks = [
 const Footer = () => {
   return (
     <footer className="bg-gray-50 py-16">
-      <div className="container mx-auto px-4 grid gap-8 md:grid-cols-4">
+      <div className="container-custom mx-auto px-4 grid gap-8 md:grid-cols-4">
         <div>
           <h3 className="font-serif text-xl font-semibold text-gray-900 mb-4">
             Serenity Spa

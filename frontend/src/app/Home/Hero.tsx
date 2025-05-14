@@ -5,7 +5,7 @@ const Hero = () => {
   return (
     <div className="bg-[url('/images/hero.avif')] bg-cover bg-center h-[80vh] w-screen relative">
       <div className="absolute top-0 w-full h-full bg-black/50 z-1">
-        <div className="flex flex-col items-center justify-center h-full container mx-auto px-5 ">
+        <div className="flex flex-col items-center justify-center h-full container-custom mx-auto px-5 ">
           <h2 className="text-5xl font-bold text-white font-serif mb-4 text-shadow md:font-6xl ">
             {" "}
             Discover True Relaxation

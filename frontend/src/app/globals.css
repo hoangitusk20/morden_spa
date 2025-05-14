@@ -120,3 +120,38 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .container-custom {
+    @apply mx-auto px-4 w-full;
+    max-width: 100%;
+
+    /* Tailwind breakpoints tương ứng */
+  }
+
+  @media (min-width: 640px) {
+    .container-custom {
+      max-width: 640px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .container-custom {
+      max-width: 768px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container-custom {
+      max-width: 1024px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .container-custom {
+      max-width: 1280px;
+    }
+  }
+
+  /* ❌ KHÔNG có max-width ở 2xl (>= 1536px) */
+}

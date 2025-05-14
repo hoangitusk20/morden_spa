@@ -18,8 +18,8 @@ const Navbar = () => {
   const pathname = usePathname();
 
   return (
-    <header className="bg-white/80 h-20 fixed top-0 left-0 right-0 z-20">
-      <div className="container mx-auto flex justify-between items-center h-full ">
+    <header className="bg-white/90 h-20 fixed top-0 left-0 right-0 z-20">
+      <div className="container-custom mx-auto flex justify-between items-center h-full ">
         <h2 className="text-2xl text-primary font-bold text-center mx-5">
           Serenty Spa
         </h2>
