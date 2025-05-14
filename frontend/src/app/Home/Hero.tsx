@@ -1,0 +1,29 @@
+import Link from "next/link";
+import React from "react";
+
+const Hero = () => {
+  return (
+    <div className="bg-[url('/images/hero.avif')] bg-cover bg-center h-[80vh] w-screen relative">
+      <div className="absolute top-0 w-full h-full bg-black/50 z-1">
+        <div className="flex flex-col items-center justify-center h-full container mx-auto px-5 ">
+          <h2 className="text-5xl font-bold text-white font-serif mb-4 text-shadow md:font-6xl ">
+            {" "}
+            Discover True Relaxation
+          </h2>
+          <p className="text-lg text-white text-center tracking-tighter mt-4 lg:w-[50vw] mb-8">
+            Indulge in a world of relaxation, rejuvenation, and self-care with
+            our premium spa treatments designed for your wellbeing.
+          </p>
+          <Link
+            href={"contact"}
+            className="md:px-8 py-3 bg-primary text-white text-sm rounded-md"
+          >
+            Book Your Experience
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Hero;
