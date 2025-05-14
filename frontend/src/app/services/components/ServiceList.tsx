@@ -12,6 +12,21 @@ const ServiceList = ({ services }: ServiceListProps) => {
   const categories = ["All", "Massage", "Facial", "Body", "Hair", "Nails"];
   const [activeCategory, setActiveCategory] = useState<string>("All");
   const [sortBy, setSortBy] = useState<string>("default");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const limit = 8; // số service mỗi trang
+
+  const fetchServices = async (page: number) => {
+    setTotalPages(totalPages);
+    setCurrentPage(page);
+  };
+
+  const handlePageChange = (page: number) => {
+    if (page < 1 || page > totalPages) return;
+    fetchServices(page);
+  };
+
   const filteredAndSortedServices = useMemo(() => {
     // Filter by category
     const filtered =
@@ -93,6 +108,39 @@ const ServiceList = ({ services }: ServiceListProps) => {
           <div className="">No Service Found!</div>
         )}
       </div>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-2 mt-6">
+          <Button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="px-3 py-1 border rounded disabled:opacity-50"
+          >
+            Prev
+          </Button>
+          {[...Array(totalPages)].map((_, i) => (
+            <Button
+              key={i + 1}
+              onClick={() => handlePageChange(i + 1)}
+              className={`px-3 py-1 border rounded ${
+                currentPage === i + 1
+                  ? ""
+                  : "bg-white border-1 border-primary text-primary"
+              }`}
+            >
+              {i + 1}
+            </Button>
+          ))}
+          <Button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 border rounded disabled:opacity-50"
+          >
+            Next
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
