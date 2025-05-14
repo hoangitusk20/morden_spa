@@ -10,15 +10,15 @@ import { ShoppingCart } from "lucide-react";
 const Navbar = () => {
   const navLinks = [
     { href: "/", label: "Home" },
-    { href: "/about", label: "About" },
     { href: "/services", label: "Services" },
+    { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
   ];
 
   const pathname = usePathname();
 
   return (
-    <header className="bg-white/90 h-20 fixed top-0 left-0 right-0 z-20">
+    <header className="bg-white/95 h-20 fixed top-0 left-0 right-0 z-20 shadow-md">
       <div className="container-custom mx-auto flex justify-between items-center h-full ">
         <h2 className="text-2xl text-primary font-bold text-center mx-5">
           Serenty Spa
