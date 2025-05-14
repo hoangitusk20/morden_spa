@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const CoreFeature = () => {
   return (
-    <div className="w-screen bg-gray-100 py-20">
+    <div className="bg-gray-100 py-20">
       <div className="container-custom mx-auto  flex-col justify-center items-center">
         <h1 className="text-4xl text-gray-800 text-center font-serif mb-5">
           Our Signature Treatments

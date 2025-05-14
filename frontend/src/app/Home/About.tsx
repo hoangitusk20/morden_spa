@@ -30,7 +30,7 @@ const AboutSection = () => {
           {/* Content Side */}
           <div>
             <h2 className="font-display text-3xl md:text-4xl mb-4">
-              Welcome to SereneSpa
+              Welcome to Serenty Spa
             </h2>
             <div className="w-16 h-1 bg-spa-gold mb-6"></div>
             <p className="text-gray-700 mb-6">

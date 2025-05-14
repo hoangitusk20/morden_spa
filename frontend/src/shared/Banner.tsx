@@ -1,17 +1,18 @@
 import React from "react";
 
-type HeroProps = {
+type BannerProps = {
   title: string;
   description: string;
   image: string;
 };
 
-const Hero = ({ title, description, image }: HeroProps) => {
+const Banner = ({ title, description, image }: BannerProps) => {
   return (
     <div
-      className={`bg-[url('/images/AboutHero.jpg')] bg-cover bg-center h-[400px] w-full relative`}
+      className="bg-cover bg-center h-[400px] w-full relative"
+      style={{ backgroundImage: `url(${image})` }}
     >
-      <div className="absolute top-0 w-full h-full bg-black/40 z-1 flex flex-col justify-center items-center ">
+      <div className="absolute top-0 w-full h-full bg-black/50 z-1 flex flex-col justify-center items-center ">
         <h1 className="text-white text-5xl font-serif font-semibold text-center my-4">
           {title}
         </h1>
@@ -22,4 +23,4 @@ const Hero = ({ title, description, image }: HeroProps) => {
   );
 };
 
-export default Hero;
+export default Banner;
