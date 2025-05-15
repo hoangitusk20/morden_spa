@@ -7,5 +7,6 @@ export interface Service {
     description: string;
     detailDescription: string;
     category:string;
+    quantity?: number;
   }
   

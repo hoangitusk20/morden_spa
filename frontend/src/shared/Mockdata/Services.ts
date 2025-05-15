@@ -10,7 +10,7 @@ const services: Service[] = [
     description:
       "A relaxing massage with essential oils to calm your mind and rejuvenate your body.",
     detailDescription:
-    "Aromatherapy Massage combines the soothing power of massage therapy with the healing properties of essential oils. This treatment begins with a consultation to choose essential oils tailored to your specific needs—whether you’re seeking stress relief, energy renewal, or emotional balance. During the session, the therapist uses gentle to medium pressure and smooth, flowing strokes to promote deep relaxation and reduce anxiety. The essential oils, such as lavender, eucalyptus, or chamomile, are absorbed through the skin and inhaled through the senses, triggering a calming response in the nervous system. The serene ambiance, accompanied by soft music and warm lighting, enhances the therapeutic effect, allowing your mind to drift into a peaceful state. Beyond relaxation, Aromatherapy Massage can improve circulation, ease muscle tension, boost your immune system, and enhance your mood. Whether you're coping with daily stress, recovering from burnout, or simply looking to pamper yourself, this massage offers a holistic experience that nurtures both body and soul. You’ll leave the session feeling lighter, more centered, and deeply refreshed. Ideal for those new to massage or anyone looking to unwind with a natural, aromatic approach.",
+      "A soothing massage that combines gentle pressure with the therapeutic benefits of essential oils. This treatment promotes relaxation, reduces stress, and enhances overall well-being. Perfect for those seeking a tranquil escape from daily life.",
 
     category: "Massage",
   },

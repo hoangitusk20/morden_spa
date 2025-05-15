@@ -4,6 +4,7 @@ import { Service } from "./type";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import AddToCartButton from "./AddToCartButton";
 
 interface ServiceCardProps {
   service: Service;
@@ -37,13 +38,17 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
         <p className="py-4 text-md text-gray-600 line-clamp-3 h-[5.5rem] overflow-hidden text-ellipsis">
           {service.description}
         </p>
-        <Link
-          href={`/services/${service.id}`}
-          className="py-2 mt-2 px-4 hover:bg-primary hover:text-white rounded-lg flex md:inline-flex justify-center md:justify-start"
-        >
-          <span className="mr-2">Learn more</span>
-          <ArrowRight className="group-hover:ml-2  " />
-        </Link>
+        <div className="flex justify-between items-center">
+          <Link
+            href={`/services/${service.id}`}
+            className="py-2 mt-2 px-4 hover:border-b-2  hover:text-primary rounded-lg flex md:inline-flex justify-center md:justify-start"
+          >
+            <span className="mr-2">Learn more</span>
+            <ArrowRight className="group-hover:ml-2  " />
+          </Link>
+
+          <AddToCartButton service={service} />
+        </div>
       </div>
     </div>
   );

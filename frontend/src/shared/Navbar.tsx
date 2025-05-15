@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Menu, ShoppingCart } from "lucide-react";
+import Cart from "./Cart";
 
 const Navbar = () => {
   const navLinks = [
@@ -17,6 +18,7 @@ const Navbar = () => {
 
   const pathname = usePathname();
   const [isOpenMenu, setIsOpenMenu] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   return (
     <header className="bg-white/95 h-20 fixed top-0 left-0 right-0 z-20 shadow-md">
@@ -43,7 +45,9 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center relative">
-          <ShoppingCart className="mx-6" />
+          <button onClick={() => setIsCartOpen(!isCartOpen)}>
+            <ShoppingCart className="mx-6" />
+          </button>
           {/* <Button className="mx-3">Book now</Button> */}
 
           {/* Show menu on mobile */}
@@ -59,7 +63,7 @@ const Navbar = () => {
         {/* Mobile menu */}
         <div
           className={`
-          absolute w-full top-20 right-0 bg-white shadow-lg rounded-lg p-4 z-10
+          absolute w-full top-20 right-0 bg-white shadow-lg rounded-b-lg p-4 z-10
           transition-all duration-300 ease-in-out
           transform ${
             isOpenMenu
@@ -81,6 +85,10 @@ const Navbar = () => {
             </Link>
           ))}
         </div>
+      </div>
+      <div className="">
+        {/* Cart component */}
+        <Cart isCartOpen={isCartOpen} setIsCartOpen={setIsCartOpen} />
       </div>
     </header>
   );
