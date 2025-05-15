@@ -14,8 +14,8 @@ const ServiceList = ({ services }: ServiceListProps) => {
   const [sortBy, setSortBy] = useState<string>("default");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const limit = 8; // số service mỗi trang
+  // const [isLoading, setIsLoading] = useState<boolean>(false);
+  // const limit = 8; // số service mỗi trang
 
   const fetchServices = async (page: number) => {
     setTotalPages(totalPages);
@@ -51,7 +51,7 @@ const ServiceList = ({ services }: ServiceListProps) => {
       // Default - no sorting
       return 0;
     });
-  }, [activeCategory, sortBy]);
+  }, [activeCategory, sortBy, services]);
 
   return (
     <div className="py-15 container-custom ">

@@ -4,7 +4,6 @@ import React from "react";
 
 const Gallery = () => {
   const images = getGalleryImages();
-  console.log(images);
   return (
     <div className="container-custom py-15">
       <div className="text-center max-w-3xl mx-auto mb-16">

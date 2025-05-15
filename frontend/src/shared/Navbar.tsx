@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation";
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Menu, ShoppingCart } from "lucide-react";
 import Cart from "./Cart";
 

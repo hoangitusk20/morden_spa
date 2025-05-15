@@ -15,8 +15,11 @@ export default function AboutPage() {
           spa experiences."
       />
       <Story />
+
       <OurValues />
+
       <Gallery />
+
       <Video />
     </div>
   );

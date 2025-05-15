@@ -1,5 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import React from "react";
+// import { motion } from "framer-motion";
+// import { useInView } from "react-intersection-observer";
 
 const Hero = () => {
   return (
