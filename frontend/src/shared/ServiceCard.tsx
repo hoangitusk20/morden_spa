@@ -1,18 +1,29 @@
 // components/ServiceCard.tsx
-import React from "react";
+"use client";
+import React, { useRef } from "react";
 import { Service } from "./type";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import AddToCartButton from "./AddToCartButton";
+import { motion, useInView } from "framer-motion";
 
 interface ServiceCardProps {
   service: Service;
 }
 
 const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+
   return (
-    <div className="group w-full rounded-lg shadow-md hover:shadow-xl overflow-hidden bg-white">
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 50 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="group w-full rounded-lg shadow-md hover:shadow-xl overflow-hidden bg-white"
+    >
       <div className="relative h-64 overflow-hidden">
         <div className="relative w-full h-full">
           <Image
@@ -50,7 +61,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
           <AddToCartButton service={service} />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

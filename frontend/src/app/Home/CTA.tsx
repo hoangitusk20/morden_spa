@@ -1,11 +1,21 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import React from "react";
+import { motion, useInView } from "framer-motion";
+import React, { useRef } from "react";
 
 const CTA = () => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
   return (
     <section className="section-padding bg-primary text-white py-20">
-      <div className="container-custom">
+      <motion.div
+        ref={ref}
+        initial={{ opacity: 0, y: 50 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="container-custom"
+      >
         <div className="text-center max-w-3xl mx-auto animate-fade-in">
           <h2 className="text-5xl font-medium font-serif mb-4">
             Transform Your Experience
@@ -25,7 +35,7 @@ const CTA = () => {
             </Button>
           </Link>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };

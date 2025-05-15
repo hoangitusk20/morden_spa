@@ -1,13 +1,23 @@
-import React from "react";
+"use client";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
+import { motion, useInView } from "framer-motion";
+import React, { useRef } from "react";
 
 const AboutSection = () => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
   return (
     <section className="py-20 bg-spa-sand/50">
       <div className="container-custom">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <motion.div
+          ref={ref}
+          initial={{ opacity: 0, y: 50 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
+        >
           {/* Image Side */}
           <div className="relative">
             <Image
@@ -57,7 +67,7 @@ const AboutSection = () => {
               </Button>
             </Link>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

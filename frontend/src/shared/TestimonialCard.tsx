@@ -1,7 +1,9 @@
-import React from "react";
+"use client";
+import React, { useRef } from "react";
 import { Star } from "lucide-react";
 import { TestimonialProps } from "./Mockdata/Testimonials";
 import Image from "next/image";
+import { motion, useInView } from "framer-motion";
 
 const TestimonialCard: React.FC<TestimonialProps> = ({
   name,
@@ -10,8 +12,16 @@ const TestimonialCard: React.FC<TestimonialProps> = ({
   text,
   service,
 }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
   return (
-    <div className="bg-white rounded-lg p-6 shadow-md hover:shadow-xl">
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 50 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="bg-white rounded-lg p-6 shadow-md hover:shadow-xl"
+    >
       <div className="flex items-center mb-4">
         <div className=" rounded-full overflow-hidden mr-4">
           <Image
@@ -42,7 +52,7 @@ const TestimonialCard: React.FC<TestimonialProps> = ({
       </div>
 
       <p className="text-gray-600 italic">{text}</p>
-    </div>
+    </motion.div>
   );
 };
 

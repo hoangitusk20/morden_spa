@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+import React, { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 
 const values = [
   {
@@ -98,6 +100,8 @@ const values = [
 ];
 
 const OurValues = () => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
   return (
     <section className="section-padding bg-spa-lavender/10 bg-gray-50 py-15">
       <div className="container-custom">
@@ -112,13 +116,20 @@ const OurValues = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {values.map((value) => (
-            <div className="rounded-md shadow-lg p-6 bg-white" key={value.id}>
+            <motion.div
+              ref={ref}
+              initial={{ opacity: 0, y: 50 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="rounded-md shadow-lg p-6 bg-white"
+              key={value.id}
+            >
               <div className="text-primary mb-4">{value.icon}</div>
               <h3 className="text-xl font-serif font-medium mb-4">
                 {value.title}
               </h3>
               <p className="text-gray-600 text-md">{value.description}</p>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

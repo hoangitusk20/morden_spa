@@ -1,6 +1,6 @@
 import { getGalleryImages } from "@/lib/GetGalleryImage";
-import Image from "next/image";
 import React from "react";
+import GalleryImage from "./GalleryImage";
 
 const Gallery = () => {
   const images = getGalleryImages();
@@ -17,17 +17,7 @@ const Gallery = () => {
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         {images.map((src, i) => (
-          <div
-            key={i}
-            className="relative w-full aspect-[4/3] overflow-hidden rounded-lg"
-          >
-            <Image
-              src={src}
-              alt={`Gallery Image ${i + 1}`}
-              fill
-              className="object-cover  transition duration-500 transform hover:scale-110 hover:z-10"
-            />
-          </div>
+          <GalleryImage key={i} src={src} index={i} />
         ))}
       </div>
     </div>

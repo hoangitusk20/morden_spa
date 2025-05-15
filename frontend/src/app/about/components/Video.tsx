@@ -1,10 +1,20 @@
-import React from "react";
+"use client";
+import React, { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 
 const Video = () => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
   return (
     <section className="section-padding bg-gray-100 py-15">
       <div className="container-custom">
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <motion.div
+          ref={ref}
+          initial={{ opacity: 0, y: 50 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="text-center max-w-3xl mx-auto mb-16"
+        >
           <span className="uppercase text-gray-400 text-md">
             See It In Action
           </span>
@@ -15,7 +25,7 @@ const Video = () => {
             Experience the ambiance and offerings of Serene Beauty Spa through
             our virtual tour video.
           </p>
-        </div>
+        </motion.div>
 
         <div className="aspect-video max-w-4xl mx-auto rounded-lg overflow-hidden shadow-lg">
           <iframe
