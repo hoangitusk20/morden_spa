@@ -5,7 +5,11 @@ import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import Link from "next/link";
 import { Menu, ShoppingCart } from "lucide-react";
-import Cart from "./Cart";
+import dynamic from "next/dynamic";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+
+const Cart = dynamic(() => import("./Cart"), { ssr: false });
 
 const Navbar = () => {
   const navLinks = [
@@ -18,6 +22,8 @@ const Navbar = () => {
   const pathname = usePathname();
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const cartItems = useSelector((state: RootState) => state.cart.items);
+  const cartCount = cartItems.length;
 
   return (
     <header className="bg-white/95 h-20 fixed top-0 left-0 right-0 z-20 shadow-md">
@@ -46,6 +52,11 @@ const Navbar = () => {
         <div className="flex items-center relative">
           <button onClick={() => setIsCartOpen(!isCartOpen)}>
             <ShoppingCart className="mx-6" />
+            {cartCount > 0 && (
+              <span className="absolute -top-2 right-3 bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                {cartCount}
+              </span>
+            )}
           </button>
           {/* <Button className="mx-3">Book now</Button> */}
 

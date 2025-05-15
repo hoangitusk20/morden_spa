@@ -32,12 +32,7 @@ const BookingSummary = () => {
         <div className="">
           <ul>
             {cart.map((item) => (
-              <CartItem
-                key={item.id}
-                item={item}
-                setCart={setCart}
-                cart={cart}
-              />
+              <CartItem key={item.id} item={item} />
             ))}
           </ul>
           <div className="flex justify-between items-center mt-4 mb-4">

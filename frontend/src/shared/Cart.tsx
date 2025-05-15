@@ -1,10 +1,10 @@
 "use client";
 import { X } from "lucide-react";
-import React, { useEffect, useState } from "react";
 
-import { Service } from "./type";
 import Link from "next/link";
 import CartItem from "./CartItem";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 const Cart = ({
   isCartOpen,
   setIsCartOpen,
@@ -12,29 +12,17 @@ const Cart = ({
   isCartOpen: boolean;
   setIsCartOpen: (value: boolean) => void;
 }) => {
-  const [cart, setCart] = useState<Service[]>([]);
-
-  useEffect(() => {
-    const storedCart = localStorage.getItem("cart");
-    if (storedCart) {
-      try {
-        const parsedCart = JSON.parse(storedCart);
-        setCart(parsedCart);
-      } catch (error) {
-        console.error("Lỗi khi parse cart từ localStorage:", error);
-      }
-    }
-  }, [isCartOpen]);
+  const cart = useSelector((state: RootState) => state.cart.items);
 
   return (
     <div
-      className={`fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 ${
+      className={`overflow-y-scroll fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 ${
         isCartOpen ? "opacity-100 visible" : "opacity-0 invisible"
       }`}
       onClick={() => setIsCartOpen(false)}
     >
       <div
-        className={`absolute right-0 top-0 w-80 md:w-100 h-full bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${
+        className={`absolute right-0 top-0 w-80 md:w-100 min-h-full bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${
           isCartOpen ? "translate-x-0" : "translate-x-full"
         }`}
         onClick={(e) => e.stopPropagation()}
@@ -56,12 +44,7 @@ const Cart = ({
             <div>
               <ul>
                 {cart.map((item) => (
-                  <CartItem
-                    key={item.id}
-                    item={item}
-                    setCart={setCart}
-                    cart={cart}
-                  />
+                  <CartItem key={item.id} item={item} />
                 ))}
               </ul>
               <Link

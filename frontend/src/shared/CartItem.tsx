@@ -1,42 +1,33 @@
 import React from "react";
 import { Service } from "./type";
 import Image from "next/image";
+import { useDispatch } from "react-redux";
+import { removeService, updateService } from "@/store/slices/CartSlice";
 
-const CartItem = ({
-  cart,
-  setCart,
-  item,
-}: {
-  cart: Service[];
-  setCart: (value: Service[]) => void;
-  item: Service;
-}) => {
-  const updateCart = (updatedCart: Service[]) => {
-    setCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+const CartItem = ({ item }: { item: Service }) => {
+  const dispatch = useDispatch();
+
+  const increaseQty = (service: Service) => {
+    const updatedService = {
+      ...item,
+      quantity: service.quantity ? service.quantity + 1 : 1,
+    };
+    dispatch(updateService(updatedService));
   };
 
-  const increaseQty = (id: string) => {
-    const updated = cart.map((item) =>
-      item.id === id && item.quantity
-        ? { ...item, quantity: item.quantity + 1 }
-        : item
-    );
-    updateCart(updated);
-  };
-
-  const decreaseQty = (id: string) => {
-    const updated = cart.map((item) =>
-      item.id === id && item.quantity
-        ? { ...item, quantity: Math.max(1, item.quantity - 1) }
-        : item
-    );
-    updateCart(updated);
+  const decreaseQty = (service: Service) => {
+    let updatedService = service;
+    if (service.quantity && service.quantity > 1) {
+      updatedService = {
+        ...item,
+        quantity: service.quantity - 1,
+      };
+    }
+    dispatch(updateService(updatedService));
   };
 
   const removeItem = (id: string) => {
-    const updated = cart.filter((item) => item.id !== id);
-    updateCart(updated);
+    dispatch(removeService(id));
   };
 
   return (
@@ -54,14 +45,14 @@ const CartItem = ({
           <div className="flex items-center gap-2 mt-1">
             <button
               className="px-2 py-1 bg-gray-200 rounded"
-              onClick={() => decreaseQty(item.id)}
+              onClick={() => decreaseQty(item)}
             >
               -
             </button>
             <span>{item.quantity}</span>
             <button
               className="px-2 py-1 bg-gray-200 rounded"
-              onClick={() => increaseQty(item.id)}
+              onClick={() => increaseQty(item)}
             >
               +
             </button>
