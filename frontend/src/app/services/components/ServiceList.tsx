@@ -3,6 +3,7 @@ import React, { useMemo, useState } from "react";
 import { Service } from "@/shared/type";
 import ServiceCard from "@/shared/ServiceCard";
 import { Button } from "@/components/ui/button";
+import { AnimatePresence, motion } from "framer-motion";
 
 type ServiceListProps = {
   services: Service[];
@@ -101,9 +102,19 @@ const ServiceList = ({ services }: ServiceListProps) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         {filteredAndSortedServices.length > 0 ? (
-          filteredAndSortedServices.map((service) => (
-            <ServiceCard service={service} key={service.id} />
-          ))
+          <AnimatePresence mode="wait">
+            {filteredAndSortedServices.map((service) => (
+              <motion.div
+                key={`${service.id}-${activeCategory}-${sortBy}`}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 50 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+              >
+                <ServiceCard service={service} />
+              </motion.div>
+            ))}
+          </AnimatePresence>
         ) : (
           <div className="">No Service Found!</div>
         )}

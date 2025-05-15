@@ -1,9 +1,13 @@
-import React from "react";
+"use client";
+import React, { useRef } from "react";
 import services from "../../shared/Mockdata/Services";
 import ServiceCard from "@/shared/ServiceCard";
 import Link from "next/link";
+import { motion, useInView } from "framer-motion";
 
 const CoreFeature = () => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
   return (
     <div className="bg-gray-100 py-20">
       <div className="container-custom mx-auto  flex-col justify-center items-center">
@@ -14,11 +18,17 @@ const CoreFeature = () => {
           Indulge in our carefully curated treatments designed to provide the
           ultimate relaxation and rejuvenation experience.
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 mt-15">
+        <motion.div
+          ref={ref}
+          initial={{ opacity: 0, y: 50 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 mt-15"
+        >
           {services.slice(0, 4).map((service) => (
             <ServiceCard service={service} key={service.id} />
           ))}
-        </div>
+        </motion.div>
         <div className="text-center mt-15 ">
           <Link
             href={"/services"}
