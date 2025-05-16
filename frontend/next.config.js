@@ -1,8 +1,5 @@
-module.exports = {
-  output: 'export',
-  
-  images: {
-    unoptimized: true,
-  },
-  
-}
+const nextConfig = {
+  /* config options here */
+};
+
+module.exports = nextConfig;
