@@ -4,8 +4,8 @@ import { Model } from 'mongoose';
 
 import { Service, ServiceDocument } from './schemas/service.schema';
 import { plainToInstance } from 'class-transformer';
-import { CreateServiceDto } from './dto/create-service.dto/create-service.dto';
-import { ServiceResponseDto } from './dto/service-response.dto/service-response.dto';
+import { CreateServiceDto } from './dto/create-service.dto';
+import { ServiceResponseDto } from './dto/service-response.dto';
 
 @Injectable()
 export class ServiceService {

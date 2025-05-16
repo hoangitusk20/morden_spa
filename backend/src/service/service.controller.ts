@@ -9,8 +9,8 @@ import {
   Put,
 } from '@nestjs/common';
 import { ServiceService } from './service.service';
-import { CreateServiceDto } from './dto/create-service.dto/create-service.dto';
-import { ServiceResponseDto } from './dto/service-response.dto/service-response.dto';
+import { CreateServiceDto } from './dto/create-service.dto';
+import { ServiceResponseDto } from './dto/service-response.dto';
 import { cp } from 'fs';
 
 @Controller('service')
