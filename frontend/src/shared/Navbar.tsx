@@ -1,4 +1,4 @@
-"use client"; // Nếu bạn dùng App Router, Navbar cần là component client
+"use client";
 
 import { usePathname } from "next/navigation";
 

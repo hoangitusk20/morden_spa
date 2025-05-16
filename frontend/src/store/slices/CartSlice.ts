@@ -1,4 +1,3 @@
-import { loadState } from '@/lib/localStorage';
 import { Service } from '@/shared/type';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
@@ -6,17 +5,20 @@ interface CartState {
   items: Service[];
 }
 
-// Load localStorage nếu có, fallback về []
-const persistedCart = loadState<Service[]>('cart') || [];
-
 const initialState: CartState = {
-  items: persistedCart,
+  items: [],
 };
 
 export const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
+
+    //Set cart from localStorage
+    setCart: (state, action: PayloadAction<Service[]>) => {
+      state.items = action.payload;
+    },
+
     addService: (state, action: PayloadAction<Service>) => {
       const exists = state.items.find(item => item.id === action.payload.id);
       if (!exists) {
@@ -45,5 +47,5 @@ export const cartSlice = createSlice({
   },
 });
 
-export const { addService, removeService, clearCart, updateService } = cartSlice.actions;
+export const { addService, removeService, clearCart, updateService , setCart } = cartSlice.actions;
 export default cartSlice.reducer;
