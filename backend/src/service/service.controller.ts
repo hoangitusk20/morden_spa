@@ -7,17 +7,20 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ServiceService } from './service.service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { ServiceResponseDto } from './dto/service-response.dto';
 import { cp } from 'fs';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('service')
 export class ServiceController {
   constructor(private readonly serviceService: ServiceService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   async create(
     @Body() createServiceDto: CreateServiceDto,
   ): Promise<ServiceResponseDto> {
@@ -35,6 +38,7 @@ export class ServiceController {
     return this.serviceService.findOne(id);
   }
   @Put(':id')
+  @UseGuards(JwtAuthGuard)
   async update(
     @Param('id') id: string,
     @Body() updateServiceDto: CreateServiceDto,
@@ -44,6 +48,7 @@ export class ServiceController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   @HttpCode(204)
   async remove(@Param('id') id: string): Promise<void> {
     return this.serviceService.remove(id);
