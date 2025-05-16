@@ -1,3 +1,4 @@
+"use client";
 import Banner from "@/shared/Banner";
 import BookingSummary from "./components/BookingSummary";
 import BookingForm from "./components/BookingForm";

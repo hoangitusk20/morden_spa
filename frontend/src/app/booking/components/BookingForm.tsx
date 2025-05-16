@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Calendar, Clock } from "lucide-react";
+import { CalendarIcon, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -48,18 +48,18 @@ export default function BookingForm() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <Label htmlFor="date">Select Date</Label>
+
             <Popover>
               <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-full justify-start text-left font-normal h-12 bg-white"
+                <button
+                  className="w-full flex items-center py-3 border-1 rounded-md shadow-xs px-2 font-thin justify-start text-left h-12 bg-white"
                   id="date"
                 >
-                  <Calendar className="mr-2 h-4 w-4" />
+                  <CalendarIcon className="mx-3 h-4 w-4" />
                   {date ? format(date, "PPP") : "Select a date"}
-                </Button>
+                </button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
+              <PopoverContent className="w-auto p-0 z-20" align="start">
                 <DayPicker mode="single" selected={date} onSelect={setDate} />
               </PopoverContent>
             </Popover>
@@ -69,14 +69,13 @@ export default function BookingForm() {
             <Label htmlFor="time">Select Time</Label>
             <Popover>
               <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-full justify-start text-left font-normal h-12 bg-white"
+                <button
+                  className="w-full flex items-center py-3 border-1 rounded-md shadow-xs px-2 font-thin justify-start text-left h-12 bg-white"
                   id="time"
                 >
                   <Clock className="mr-2 h-4 w-4" />
                   {time ? time : "Select a time"}
-                </Button>
+                </button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-4" align="start">
                 <div className="grid gap-4">

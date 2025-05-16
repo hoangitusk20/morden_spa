@@ -1,22 +1,13 @@
 "use client";
 import CartItem from "@/shared/CartItem";
 import { Service } from "@/shared/type";
-import React, { useEffect, useState } from "react";
+import { RootState } from "@/store";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
 const BookingSummary = () => {
-  const [cart, setCart] = useState<Service[]>([]);
+  const cart = useSelector((state: RootState) => state.cart.items);
 
-  useEffect(() => {
-    const storedCart = localStorage.getItem("cart");
-    if (storedCart) {
-      try {
-        const parsedCart = JSON.parse(storedCart);
-        setCart(parsedCart);
-      } catch (error) {
-        console.error("Lỗi khi parse cart từ localStorage:", error);
-      }
-    }
-  }, []);
   const totalPrice = cart.reduce((total, item) => {
     return total + item.price * (item.quantity || 1);
   }, 0);
