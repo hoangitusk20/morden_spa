@@ -1,6 +1,13 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 const data = [
   { date: "Mon", revenue: 1200 },
@@ -43,8 +50,12 @@ const RevenueChart = () => {
                 tickFormatter={(value) => `$${value}`}
               />
               <Tooltip
-                contentStyle={{ backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
-                formatter={(value: any) => [`$${value}`, 'Revenue']}
+                contentStyle={{
+                  backgroundColor: "white",
+                  borderRadius: "8px",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                }}
+                formatter={(value: number) => [`$${value}`, "Revenue"]}
               />
               <Area
                 type="monotone"

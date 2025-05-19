@@ -30,5 +30,4 @@ type StaffMember = {
   phone: string;
   position: string;
   specialties: string[];
-
 }
