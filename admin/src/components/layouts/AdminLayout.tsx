@@ -1,20 +1,19 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Calendar,
   Home,
-  Menu,
   Users,
   Clipboard,
   PanelLeftClose,
   PanelLeftOpen,
-  Search,
   User,
-  Bell,
-  Settings,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useDispatch } from "react-redux";
+import { logout } from "@/redux/features/authSlice";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -23,6 +22,8 @@ interface AdminLayoutProps {
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const navigationItems = [
     { name: "Dashboard", href: "/", icon: <Home className="w-5 h-5" /> },
@@ -41,6 +42,13 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   const isActive = (path: string) => {
     return location.pathname === path;
+  };
+
+  const handleLogout = () => {
+    // Dispatch logout action
+    dispatch(logout());
+    // Redirect to login page
+    navigate("/login");
   };
 
   return (
@@ -110,6 +118,19 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               </div>
             )}
           </div>
+
+          {/* Logout Button */}
+          <Button
+            variant="ghost"
+            className={cn(
+              "w-full mt-2 text-red-500 hover:text-red-700 hover:bg-red-50",
+              isSidebarCollapsed ? "justify-center px-0" : ""
+            )}
+            onClick={handleLogout}
+          >
+            <LogOut className="w-4 h-4 mr-2" />
+            {!isSidebarCollapsed && <span>Logout</span>}
+          </Button>
         </div>
       </aside>
 
