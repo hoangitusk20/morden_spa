@@ -12,7 +12,6 @@ import {
 import { ServiceService } from './service.service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { ServiceResponseDto } from './dto/service-response.dto';
-import { cp } from 'fs';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('service')
