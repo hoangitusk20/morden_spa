@@ -106,7 +106,7 @@ const Services = () => {
     setIsDeleteDialogOpen(true);
   };
 
-  const handleSubmit = (serviceData: any) => {
+  const handleSubmit = (serviceData: ServiceData) => {
     if (serviceData.id) {
       // Update existing service
       setServices((prev) =>

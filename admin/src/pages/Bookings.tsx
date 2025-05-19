@@ -1,15 +1,30 @@
-
-import { useState } from 'react';
-import AdminLayout from '../components/layouts/AdminLayout';
-import BookingsTable, { Booking } from '../components/bookings/BookingsTable';
-import CalendarView from '../components/bookings/CalendarView';
-import BookingForm from '../components/bookings/BookingForm';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CalendarIcon, ListIcon } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { toast } from 'sonner';
+import { useState } from "react";
+import AdminLayout from "../components/layouts/AdminLayout";
+import BookingsTable from "../components/bookings/BookingsTable";
+import CalendarView from "../components/bookings/CalendarView";
+import BookingForm from "../components/bookings/BookingForm";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CalendarIcon, ListIcon } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
+import { Booking } from "@/shared/type";
 
 // Mock data for services
 const mockServices = [
@@ -38,7 +53,7 @@ const mockBookings = [
     date: "May 18, 2025",
     time: "10:00 AM",
     status: "confirmed" as const,
-    amount: 95
+    amount: 95,
   },
   {
     id: "BK0011",
@@ -48,7 +63,7 @@ const mockBookings = [
     date: "May 18, 2025",
     time: "11:30 AM",
     status: "pending" as const,
-    amount: 80
+    amount: 80,
   },
   {
     id: "BK0010",
@@ -58,7 +73,7 @@ const mockBookings = [
     date: "May 17, 2025",
     time: "3:00 PM",
     status: "completed" as const,
-    amount: 120
+    amount: 120,
   },
   {
     id: "BK0009",
@@ -68,7 +83,7 @@ const mockBookings = [
     date: "May 17, 2025",
     time: "1:00 PM",
     status: "canceled" as const,
-    amount: 85
+    amount: 85,
   },
   {
     id: "BK0008",
@@ -78,7 +93,7 @@ const mockBookings = [
     date: "May 16, 2025",
     time: "4:30 PM",
     status: "completed" as const,
-    amount: 70
+    amount: 70,
   },
   {
     id: "BK0007",
@@ -88,7 +103,7 @@ const mockBookings = [
     date: "May 16, 2025",
     time: "2:00 PM",
     status: "confirmed" as const,
-    amount: 180
+    amount: 180,
   },
   {
     id: "BK0006",
@@ -98,19 +113,21 @@ const mockBookings = [
     date: "May 15, 2025",
     time: "11:00 AM",
     status: "completed" as const,
-    amount: 150
+    amount: 150,
   },
 ];
 
 const Bookings = () => {
-  const [activeView, setActiveView] = useState('list');
+  const [activeView, setActiveView] = useState("list");
   const [bookings, setBookings] = useState<Booking[]>(mockBookings);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [currentBooking, setCurrentBooking] = useState<Booking | undefined>(undefined);
+  const [currentBooking, setCurrentBooking] = useState<Booking | undefined>(
+    undefined
+  );
   const [bookingToDelete, setBookingToDelete] = useState<string | null>(null);
 
   const handleEditBooking = (id: string) => {
-    const bookingToEdit = bookings.find(booking => booking.id === id);
+    const bookingToEdit = bookings.find((booking) => booking.id === id);
     setCurrentBooking(bookingToEdit);
     setIsFormOpen(true);
   };
@@ -126,7 +143,9 @@ const Bookings = () => {
 
   const confirmDelete = () => {
     if (bookingToDelete) {
-      setBookings(prev => prev.filter(booking => booking.id !== bookingToDelete));
+      setBookings((prev) =>
+        prev.filter((booking) => booking.id !== bookingToDelete)
+      );
       toast.success("Booking deleted successfully");
       setBookingToDelete(null);
     }
@@ -135,9 +154,11 @@ const Bookings = () => {
   const handleSubmitBooking = (bookingData: Booking) => {
     if (bookingData.id) {
       // Update existing booking
-      setBookings(prev => prev.map(booking => 
-        booking.id === bookingData.id ? bookingData : booking
-      ));
+      setBookings((prev) =>
+        prev.map((booking) =>
+          booking.id === bookingData.id ? bookingData : booking
+        )
+      );
       toast.success("Booking updated successfully");
     } else {
       // Add new booking with a generated ID
@@ -145,7 +166,7 @@ const Bookings = () => {
         ...bookingData,
         id: `BK${String(Math.floor(Math.random() * 9000) + 1000)}`,
       };
-      setBookings(prev => [newBooking, ...prev]);
+      setBookings((prev) => [newBooking, ...prev]);
       toast.success("Booking created successfully");
     }
     setIsFormOpen(false);
@@ -155,18 +176,25 @@ const Bookings = () => {
     <AdminLayout>
       <div className="space-y-6 animate-fade-in">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Booking Management</h1>
-          <p className="text-muted-foreground">View and manage all customer bookings.</p>
+          <h1 className="text-2xl font-bold tracking-tight">
+            Booking Management
+          </h1>
+          <p className="text-muted-foreground">
+            View and manage all customer bookings.
+          </p>
         </div>
 
         <Tabs defaultValue="list" className="space-y-4">
           <div className="flex justify-between">
             <TabsList>
-              <TabsTrigger value="list" onClick={() => setActiveView('list')}>
+              <TabsTrigger value="list" onClick={() => setActiveView("list")}>
                 <ListIcon className="h-4 w-4 mr-2" />
                 List View
               </TabsTrigger>
-              <TabsTrigger value="calendar" onClick={() => setActiveView('calendar')}>
+              <TabsTrigger
+                value="calendar"
+                onClick={() => setActiveView("calendar")}
+              >
                 <CalendarIcon className="h-4 w-4 mr-2" />
                 Calendar View
               </TabsTrigger>
@@ -174,7 +202,7 @@ const Bookings = () => {
           </div>
 
           <TabsContent value="list" className="space-y-4">
-            <BookingsTable 
+            <BookingsTable
               bookings={bookings}
               onEdit={handleEditBooking}
               onAdd={handleAddBooking}
@@ -183,7 +211,7 @@ const Bookings = () => {
           </TabsContent>
 
           <TabsContent value="calendar">
-            <CalendarView />
+            <CalendarView bookings={bookings} staff={mockStaff} />
           </TabsContent>
         </Tabs>
       </div>
@@ -192,11 +220,13 @@ const Bookings = () => {
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
         <DialogContent className="sm:max-w-[800px]">
           <DialogHeader>
-            <DialogTitle>{currentBooking ? 'Edit Booking' : 'Create New Booking'}</DialogTitle>
+            <DialogTitle>
+              {currentBooking ? "Edit Booking" : "Create New Booking"}
+            </DialogTitle>
             <DialogDescription>
-              {currentBooking 
-                ? 'Make changes to the booking details below.' 
-                : 'Fill out the information below to create a new booking.'}
+              {currentBooking
+                ? "Make changes to the booking details below."
+                : "Fill out the information below to create a new booking."}
             </DialogDescription>
           </DialogHeader>
           <BookingForm
@@ -210,17 +240,26 @@ const Bookings = () => {
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
-      <AlertDialog open={Boolean(bookingToDelete)} onOpenChange={(open) => !open && setBookingToDelete(null)}>
+      <AlertDialog
+        open={Boolean(bookingToDelete)}
+        onOpenChange={(open) => !open && setBookingToDelete(null)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the booking and remove it from the system.
+              This action cannot be undone. This will permanently delete the
+              booking and remove it from the system.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete} className="bg-red-500 hover:bg-red-600">Delete</AlertDialogAction>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="bg-red-500 hover:bg-red-600"
+            >
+              Delete
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

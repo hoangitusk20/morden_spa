@@ -9,7 +9,7 @@ export type ServiceData = {
   image?: string;
 }
 
-export interface Booking {
+export type Booking = {
   id: string;
   customer: string;
   services: Array<{id: string, name: string, price: number}>;
@@ -23,7 +23,7 @@ export interface Booking {
 }
 
 export 
-interface StaffMember {
+type StaffMember = {
   id?: string;
   name: string;
   email: string;
