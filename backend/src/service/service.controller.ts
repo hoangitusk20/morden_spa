@@ -7,10 +7,14 @@ import {
   Param,
   Post,
   Put,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ServiceService } from './service.service';
 import { CreateServiceDto } from './dto/create-service.dto';
+import { UpdateServiceDto } from './dto/update-service.dto';
 import { ServiceResponseDto } from './dto/service-response.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
@@ -20,11 +24,13 @@ export class ServiceController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('image'))
   async create(
     @Body() createServiceDto: CreateServiceDto,
+    @UploadedFile() file: Express.Multer.File,
   ): Promise<ServiceResponseDto> {
     console.log('createServiceDto', createServiceDto);
-    return this.serviceService.create(createServiceDto);
+    return this.serviceService.create(createServiceDto, file);
   }
 
   @Get()
@@ -36,14 +42,17 @@ export class ServiceController {
   async findOne(@Param('id') id: string): Promise<ServiceResponseDto> {
     return this.serviceService.findOne(id);
   }
+
   @Put(':id')
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('image'))
   async update(
     @Param('id') id: string,
-    @Body() updateServiceDto: CreateServiceDto,
+    @Body() updateServiceDto: UpdateServiceDto,
+    @UploadedFile() file?: Express.Multer.File,
   ): Promise<ServiceResponseDto> {
     console.log('updateServiceDto', updateServiceDto);
-    return this.serviceService.update(id, updateServiceDto);
+    return this.serviceService.update(id, updateServiceDto, file);
   }
 
   @Delete(':id')

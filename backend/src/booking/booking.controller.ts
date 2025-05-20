@@ -6,7 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  NotFoundException,
   HttpCode,
 } from '@nestjs/common';
 import { BookingService } from './booking.service';

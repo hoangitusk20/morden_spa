@@ -8,22 +8,23 @@ import { Booking, BookingDocument } from './schemas/booking.schema';
 @Injectable()
 export class BookingService {
   constructor(
-    @InjectModel(Booking.name) private bookingModel: Model<BookingDocument>,
+    @InjectModel(Booking.name)
+    private readonly bookingModel: Model<BookingDocument>,
   ) {}
 
   async create(createBookingDto: CreateBookingDto): Promise<Booking> {
     const createdBooking = new this.bookingModel(createBookingDto);
-    return createdBooking.save();
+    return await createdBooking.save();
   }
 
   async findAll(): Promise<Booking[]> {
-    return this.bookingModel.find().exec();
+    return await this.bookingModel.find().exec();
   }
 
   async findOne(id: string): Promise<Booking> {
     const booking = await this.bookingModel.findById(id).exec();
     if (!booking) {
-      throw new NotFoundException(`Booking with ID ${id} not found`);
+      throw new NotFoundException(`Booking with ID "${id}" not found`);
     }
     return booking;
   }
@@ -32,24 +33,24 @@ export class BookingService {
     id: string,
     updateBookingDto: UpdateBookingDto,
   ): Promise<Booking> {
-    const updated = await this.bookingModel.findByIdAndUpdate(
-      id,
-      updateBookingDto,
-      {
+    const updatedBooking = await this.bookingModel
+      .findByIdAndUpdate(id, updateBookingDto, {
         new: true,
         runValidators: true,
-      },
-    );
-    if (!updated) {
-      throw new NotFoundException(`Booking with ID ${id} not found`);
+      })
+      .exec();
+
+    if (!updatedBooking) {
+      throw new NotFoundException(`Booking with ID "${id}" not found`);
     }
-    return updated;
+
+    return updatedBooking;
   }
 
   async remove(id: string): Promise<void> {
-    const result = await this.bookingModel.findByIdAndDelete(id).exec();
-    if (!result) {
-      throw new NotFoundException(`Booking with ID ${id} not found`);
+    const deleted = await this.bookingModel.findByIdAndDelete(id).exec();
+    if (!deleted) {
+      throw new NotFoundException(`Booking with ID "${id}" not found`);
     }
   }
 }

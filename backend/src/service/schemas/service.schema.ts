@@ -21,6 +21,7 @@ export class Service {
   @Prop({ required: true })
   price: number;
 
+  @Prop({ required: true })
   image: string;
 
   @Prop({ required: true })

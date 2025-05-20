@@ -1,39 +1,64 @@
 import {
   IsString,
-  IsEmail,
   IsNotEmpty,
+  IsArray,
+  ValidateNested,
+  IsNumber,
   IsOptional,
-  Matches,
+  IsEnum,
+  IsDateString,
 } from 'class-validator';
+import { Type } from 'class-transformer';
+
+class ServiceDto {
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsNumber()
+  price: number;
+}
 
 export class CreateBookingDto {
   @IsString()
   @IsNotEmpty()
-  firstName: string;
+  id: string;
 
   @IsString()
   @IsNotEmpty()
-  lastName: string;
+  customer: string;
 
-  @IsEmail()
-  email: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @Matches(/^\d{10,11}$/, {
-    message: 'Phone number must be 10 or 11 digits',
-  })
-  phoneNumber: string;
-
-  @IsString()
-  @IsNotEmpty()
-  date: string; // ISO format: '2025-05-15'
-
-  @IsString()
-  @IsNotEmpty()
-  time: string; // e.g. '08:15 AM'
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ServiceDto)
+  services: ServiceDto[];
 
   @IsOptional()
   @IsString()
-  specialRequests?: string;
+  staff?: string | null;
+
+  @IsDateString()
+  date: string;
+
+  @IsString()
+  @IsNotEmpty()
+  time: string;
+
+  @IsEnum(['pending', 'confirmed', 'completed', 'canceled'])
+  status: 'pending' | 'confirmed' | 'completed' | 'canceled';
+
+  @IsNumber()
+  amount: number;
+
+  @IsOptional()
+  @IsString()
+  phone?: string;
+
+  @IsOptional()
+  @IsString()
+  email?: string;
 }

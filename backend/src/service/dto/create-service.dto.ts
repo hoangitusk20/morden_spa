@@ -13,9 +13,6 @@ export class CreateServiceDto {
   readonly price: number;
 
   @IsString()
-  readonly image: string;
-
-  @IsString()
   readonly description: string;
 
   @IsString()
