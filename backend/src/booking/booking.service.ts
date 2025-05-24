@@ -17,8 +17,45 @@ export class BookingService {
     return await createdBooking.save();
   }
 
-  async findAll(): Promise<Booking[]> {
-    return await this.bookingModel.find().exec();
+  async findAll(filters?: {
+    search?: string;
+    status?: string;
+    fromDate?: string;
+    toDate?: string;
+  }): Promise<Booking[]> {
+    const query: any = {};
+
+    // Search by customer name or ID (partial match)
+    if (filters?.search) {
+      const isObjectId = /^[0-9a-fA-F]{24}$/.test(filters.search);
+
+      if (isObjectId) {
+        query.$or = [
+          { customer: { $regex: filters.search, $options: 'i' } },
+          { _id: filters.search },
+        ];
+      } else {
+        query.customer = { $regex: filters.search, $options: 'i' };
+      }
+    }
+
+    // Filter by status
+    if (filters?.status && filters.status !== 'All') {
+      query.status = filters.status;
+    }
+
+    // Filter by date range
+    if (filters?.fromDate || filters?.toDate) {
+      query.date = {};
+      if (filters.fromDate) {
+        query.date.$gte = filters.fromDate;
+      }
+      if (filters.toDate) {
+        query.date.$lte = filters.toDate;
+      }
+    }
+
+    return this.bookingModel.find(query).exec();
   }
 
   async findOne(id: string): Promise<Booking> {

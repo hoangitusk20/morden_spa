@@ -17,7 +17,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 import { StaffMember } from "@/shared/type";
 
 // Update the interface to clearly define the id property
@@ -33,7 +32,6 @@ const defaultStaffData: StaffMember = {
   name: "",
   email: "",
   phone: "",
-  position: "",
   specialties: [],
 };
 
@@ -95,7 +93,7 @@ const StaffForm: React.FC<StaffFormProps> = ({
   };
 
   // Safely determine if we're in edit mode
-  const isEditMode = Boolean(formData.id);
+  const isEditMode = Boolean(formData._id);
 
   return (
     <Card className="w-full">
@@ -116,30 +114,6 @@ const StaffForm: React.FC<StaffFormProps> = ({
                 onChange={handleChange}
                 required
               />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="position">Position</Label>
-              <Select
-                value={formData.position}
-                onValueChange={(value) => handleSelectChange("position", value)}
-              >
-                <SelectTrigger id="position">
-                  <SelectValue placeholder="Select position" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="massage_therapist">
-                    Massage Therapist
-                  </SelectItem>
-                  <SelectItem value="esthetician">Esthetician</SelectItem>
-                  <SelectItem value="hair_stylist">Hair Stylist</SelectItem>
-                  <SelectItem value="nail_technician">
-                    Nail Technician
-                  </SelectItem>
-                  <SelectItem value="wellness_coach">Wellness Coach</SelectItem>
-                  <SelectItem value="makeup_artist">Makeup Artist</SelectItem>
-                </SelectContent>
-              </Select>
             </div>
 
             <div className="space-y-2">
@@ -186,86 +160,6 @@ const StaffForm: React.FC<StaffFormProps> = ({
               ))}
             </div>
           </div>
-
-          {/* <div>
-            <Label className="mb-2 block">Available Days</Label>
-            <div className="grid grid-cols-7 gap-2">
-              {[
-                "monday",
-                "tuesday",
-                "wednesday",
-                "thursday",
-                "friday",
-                "saturday",
-                "sunday",
-              ].map((day) => (
-                // <div
-                //   key={day}
-                //   className={cn(
-                //     "flex flex-col items-center justify-center border rounded-md p-2 cursor-pointer transition-colors",
-                //     formData.availableHours[
-                //       day as keyof typeof formData.availableHours
-                //     ]
-                //       ? "bg-spa-100 border-spa-500"
-                //       : "bg-white hover:bg-muted"
-                //   )}
-                //   onClick={() =>
-                //     handleCheckboxChange(
-                //       day,
-                //       !formData.availableHours[
-                //         day as keyof typeof formData.availableHours
-                //       ]
-                //     )
-                //   }
-                // >
-                //   <span className="text-xs uppercase">
-                //     {day.substring(0, 3)}
-                //   </span>
-                // </div>
-              ))}
-            </div>
-          </div> */}
-
-          {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-             <div className="space-y-2">
-              <Label htmlFor="startTime">Start Time</Label>
-              <Input
-                id="startTime"
-                name="startTime"
-                type="time"
-                value={formData.startTime}
-                onChange={handleChange}
-              />
-            </div>  */}
-
-          {/* <div className="space-y-2">
-              <Label htmlFor="endTime">End Time</Label>
-              <Input
-                id="endTime"
-                name="endTime"
-                type="time"
-                value={formData.endTime}
-                onChange={handleChange}
-              />
-            </div> */}
-
-          {/* <div className="space-y-2">
-              <Label htmlFor="status">Status</Label>
-              <Select
-                value={formData.status}
-                onValueChange={(value) => handleSelectChange("status", value)}
-              >
-                <SelectTrigger id="status">
-                  <SelectValue placeholder="Select status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="on leave">On Leave</SelectItem>
-                  <SelectItem value="unavailable">Unavailable</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div> */}
         </CardContent>
 
         <CardFooter className="flex justify-between">

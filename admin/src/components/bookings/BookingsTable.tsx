@@ -44,6 +44,8 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Booking } from "@/shared/type";
+import { useSelector } from "react-redux";
+import { selectAllStaff } from "@/redux/features/staffSlice";
 
 interface BookingsTableProps {
   bookings: Booking[];
@@ -62,6 +64,7 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const staff = useSelector(selectAllStaff);
   const [dateRange, setDateRange] = useState<DateRange>({
     from: undefined,
     to: undefined,
@@ -72,7 +75,7 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
     // Filter by search term (customer name or ID)
     const matchesSearch =
       booking.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      booking.id.toLowerCase().includes(searchTerm.toLowerCase());
+      booking._id.toLowerCase().includes(searchTerm.toLowerCase());
 
     // Filter by status
     const matchesStatus =
@@ -354,9 +357,9 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
           <TableBody>
             {currentBookings.length > 0 ? (
               currentBookings.map((booking) => (
-                <TableRow key={booking.id}>
+                <TableRow key={booking._id}>
                   <TableCell className="font-mono text-xs">
-                    {booking.id}
+                    {booking._id}
                   </TableCell>
                   <TableCell className="font-medium">
                     {booking.customer}
@@ -375,7 +378,11 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
                         ))}
                     </div>
                   </TableCell>
-                  <TableCell>{booking.staff || "Unassigned"}</TableCell>
+                  <TableCell>
+                    {staff.find(
+                      (staffMember) => staffMember._id === booking.staff
+                    ).name || "Unassigned"}
+                  </TableCell>
                   <TableCell className="whitespace-nowrap">
                     {booking.date} at {booking.time}
                   </TableCell>
@@ -396,7 +403,7 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => onEdit(booking.id)}
+                        onClick={() => onEdit(booking._id)}
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
@@ -404,7 +411,7 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => onDelete(booking.id)}
+                          onClick={() => onDelete(booking._id)}
                           className="text-red-500"
                         >
                           <Trash2 className="h-4 w-4" />

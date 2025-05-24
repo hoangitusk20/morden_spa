@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import { Booking, StaffMember } from "@/shared/type";
 
 // Setup the localizer for React Big Calendar
 const localizer = momentLocalizer(moment);
@@ -106,17 +107,8 @@ const CustomTooltip = ({ event, position }) => {
 
 // Main component
 interface CalendarViewProps {
-  bookings: Array<{
-    id: string;
-    customer: string;
-    services: Array<{ id: string; name: string; price: number }>;
-    staff: string | null;
-    date: string;
-    time: string;
-    status: string;
-    amount: number;
-  }>;
-  staff: Array<{ id: string; name: string }>;
+  bookings: Booking[];
+  staff: StaffMember[];
 }
 
 export default function CalendarView({ bookings, staff }: CalendarViewProps) {
@@ -147,7 +139,7 @@ export default function CalendarView({ bookings, staff }: CalendarViewProps) {
       const serviceNames = booking.services.map((s) => s.name).join(", ");
 
       return {
-        id: booking.id,
+        _id: booking._id,
         title: `${booking.customer} - ${serviceNames}`,
         start: bookingDate,
         end: endDate,
@@ -194,7 +186,7 @@ export default function CalendarView({ bookings, staff }: CalendarViewProps) {
           >
             <option value="all">All Staff</option>
             {staff.map((staffMember) => (
-              <option key={staffMember.id} value={staffMember.name}>
+              <option key={staffMember._id} value={staffMember.name}>
                 {staffMember.name}
               </option>
             ))}

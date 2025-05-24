@@ -20,18 +20,17 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { Booking } from "@/shared/type";
+import { Booking, ServiceData, StaffMember } from "@/shared/type";
 
 interface BookingFormProps {
   initialData?: Booking;
   onSubmit: (data: Booking) => void;
   onCancel: () => void;
-  services: Array<{ id: string; name: string; price: number }>;
-  staff: Array<{ id: string; name: string }>;
+  services: Array<{ _id: string; name: string; price: number }>;
+  staff: StaffMember[];
 }
 
 const emptyBooking: Booking = {
-  id: "",
   customer: "",
   services: [],
   staff: null,
@@ -81,13 +80,14 @@ const BookingForm: React.FC<BookingFormProps> = ({
   };
 
   const toggleService = (serviceId: string) => {
-    const service = services.find((s) => s.id === serviceId);
+    const service = services.find((s) => s._id === serviceId);
     if (!service) return;
 
-    const serviceIndex = formData.services.findIndex((s) => s.id === serviceId);
+    const serviceIndex = formData.services.findIndex(
+      (s) => s._id === serviceId
+    );
 
     if (serviceIndex === -1) {
-      // Add service
       setFormData((prev) => ({
         ...prev,
         services: [...prev.services, service],
@@ -96,7 +96,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
       // Remove service
       setFormData((prev) => ({
         ...prev,
-        services: prev.services.filter((s) => s.id !== serviceId),
+        services: prev.services.filter((s) => s._id !== serviceId),
       }));
     }
   };
@@ -107,7 +107,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
   };
 
   const isServiceSelected = (serviceId: string) => {
-    return formData.services.some((s) => s.id === serviceId);
+    return formData.services.some((s) => s._id === serviceId);
   };
 
   return (
@@ -245,7 +245,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
                 <SelectContent>
                   <SelectItem value="unassigned">Unassigned</SelectItem>
                   {staff.map((s) => (
-                    <SelectItem key={s.id} value={s.name}>
+                    <SelectItem key={s._id} value={s._id}>
                       {s.name}
                     </SelectItem>
                   ))}
@@ -259,14 +259,17 @@ const BookingForm: React.FC<BookingFormProps> = ({
             <div className="border rounded-md p-3">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {services.map((service) => (
-                  <div key={service.id} className="flex items-center space-x-2">
+                  <div
+                    key={service._id}
+                    className="flex items-center space-x-2"
+                  >
                     <Checkbox
-                      id={`service-${service.id}`}
-                      checked={isServiceSelected(service.id)}
-                      onCheckedChange={() => toggleService(service.id)}
+                      id={`service-${service._id}`}
+                      checked={isServiceSelected(service._id)}
+                      onCheckedChange={() => toggleService(service._id)}
                     />
                     <Label
-                      htmlFor={`service-${service.id}`}
+                      htmlFor={`service-${service._id}`}
                       className="flex justify-between w-full"
                     >
                       <span>{service.name}</span>

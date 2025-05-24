@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import AdminLayout from "../components/layouts/AdminLayout";
 import BookingsTable from "../components/bookings/BookingsTable";
 import CalendarView from "../components/bookings/CalendarView";
 import BookingForm from "../components/bookings/BookingForm";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CalendarIcon, ListIcon } from "lucide-react";
 import {
@@ -24,152 +24,122 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { Booking } from "@/shared/type";
-
-// Mock data for services
-const mockServices = [
-  { id: "s1", name: "Deep Tissue Massage", price: 95 },
-  { id: "s2", name: "Facial Treatment", price: 80 },
-  { id: "s3", name: "Hot Stone Therapy", price: 120 },
-  { id: "s4", name: "Aromatherapy", price: 85 },
-  { id: "s5", name: "Body Scrub", price: 70 },
-];
-
-// Mock data for staff
-const mockStaff = [
-  { id: "1", name: "Emma Johnson" },
-  { id: "2", name: "Michael Chen" },
-  { id: "3", name: "Sophia Rodriguez" },
-  { id: "4", name: "James Wilson" },
-];
-
-// Mock data for bookings (updated to use multiple services)
-const mockBookings = [
-  {
-    id: "BK0012",
-    customer: "Alice Brown",
-    services: [mockServices[0]], // Deep Tissue Massage
-    staff: "Emma Johnson",
-    date: "May 18, 2025",
-    time: "10:00 AM",
-    status: "confirmed" as const,
-    amount: 95,
-  },
-  {
-    id: "BK0011",
-    customer: "Bob Smith",
-    services: [mockServices[1]], // Facial Treatment
-    staff: "Michael Chen",
-    date: "May 18, 2025",
-    time: "11:30 AM",
-    status: "pending" as const,
-    amount: 80,
-  },
-  {
-    id: "BK0010",
-    customer: "Carol Davis",
-    services: [mockServices[2]], // Hot Stone Therapy
-    staff: "Sophia Rodriguez",
-    date: "May 17, 2025",
-    time: "3:00 PM",
-    status: "completed" as const,
-    amount: 120,
-  },
-  {
-    id: "BK0009",
-    customer: "David Wilson",
-    services: [mockServices[3]], // Aromatherapy
-    staff: null, // Unassigned
-    date: "May 17, 2025",
-    time: "1:00 PM",
-    status: "canceled" as const,
-    amount: 85,
-  },
-  {
-    id: "BK0008",
-    customer: "Eva Martin",
-    services: [mockServices[4]], // Body Scrub
-    staff: null, // Unassigned
-    date: "May 16, 2025",
-    time: "4:30 PM",
-    status: "completed" as const,
-    amount: 70,
-  },
-  {
-    id: "BK0007",
-    customer: "Frank Thomas",
-    services: [mockServices[0], mockServices[3]], // Multiple services
-    staff: "Sophia Rodriguez",
-    date: "May 16, 2025",
-    time: "2:00 PM",
-    status: "confirmed" as const,
-    amount: 180,
-  },
-  {
-    id: "BK0006",
-    customer: "Grace Lee",
-    services: [mockServices[1], mockServices[4]], // Multiple services
-    staff: "James Wilson",
-    date: "May 15, 2025",
-    time: "11:00 AM",
-    status: "completed" as const,
-    amount: 150,
-  },
-];
+import {
+  Booking,
+  CreateBookingRequest,
+  UpdateBookingRequest,
+} from "@/shared/type";
+import { AppDispatch, RootState } from "../redux/store";
+import {
+  fetchBookings,
+  createBooking,
+  updateBooking,
+  deleteBooking,
+  setCurrentBooking,
+  selectAllBookings,
+  selectBookingsLoading,
+  selectBookingsError,
+  selectCurrentBooking,
+} from "../redux/features/bookingSlice";
+import {
+  fetchServices,
+  selectAllServices,
+} from "@/redux/features/serviceSlice";
+import { fetchStaff } from "@/redux/features/staffSlice";
 
 const Bookings = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const bookings = useSelector(selectAllBookings);
+  const isLoading = useSelector(selectBookingsLoading);
+  const staff = useSelector((state: RootState) => state.staff.staffMembers);
+  const error = useSelector(selectBookingsError);
+  const currentBooking = useSelector(selectCurrentBooking);
+  const services = useSelector(selectAllServices);
+  const shortServices = services.map((service) => ({
+    _id: service._id,
+    name: service.title,
+    price: service.price,
+  }));
   const [activeView, setActiveView] = useState("list");
-  const [bookings, setBookings] = useState<Booking[]>(mockBookings);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [currentBooking, setCurrentBooking] = useState<Booking | undefined>(
-    undefined
-  );
-  const [bookingToDelete, setBookingToDelete] = useState<string | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  // Lấy danh sách đặt lịch khi component mount
+  useEffect(() => {
+    dispatch(fetchBookings());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (staff.length === 0) {
+      dispatch(fetchStaff());
+    }
+
+    if (services.length === 0) {
+      dispatch(fetchServices());
+    }
+  }, []);
+
+  // Hiển thị thông báo lỗi nếu có
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
 
   const handleEditBooking = (id: string) => {
-    const bookingToEdit = bookings.find((booking) => booking.id === id);
-    setCurrentBooking(bookingToEdit);
-    setIsFormOpen(true);
+    const bookingToEdit = bookings.find((booking) => booking._id === id);
+    if (bookingToEdit) {
+      dispatch(setCurrentBooking(bookingToEdit));
+      setIsFormOpen(true);
+    }
   };
 
   const handleAddBooking = () => {
-    setCurrentBooking(undefined);
+    dispatch(setCurrentBooking(null));
     setIsFormOpen(true);
   };
 
   const handleDeleteBooking = (id: string) => {
-    setBookingToDelete(id);
-  };
-
-  const confirmDelete = () => {
+    const bookingToDelete = bookings.find((booking) => booking._id === id);
     if (bookingToDelete) {
-      setBookings((prev) =>
-        prev.filter((booking) => booking.id !== bookingToDelete)
-      );
-      toast.success("Booking deleted successfully");
-      setBookingToDelete(null);
+      dispatch(setCurrentBooking(bookingToDelete));
+      setIsDeleteDialogOpen(true);
     }
   };
 
-  const handleSubmitBooking = (bookingData: Booking) => {
-    if (bookingData.id) {
-      // Update existing booking
-      setBookings((prev) =>
-        prev.map((booking) =>
-          booking.id === bookingData.id ? bookingData : booking
-        )
-      );
-      toast.success("Booking updated successfully");
-    } else {
-      // Add new booking with a generated ID
-      const newBooking = {
-        ...bookingData,
-        id: `BK${String(Math.floor(Math.random() * 9000) + 1000)}`,
-      };
-      setBookings((prev) => [newBooking, ...prev]);
-      toast.success("Booking created successfully");
+  const confirmDelete = async () => {
+    if (currentBooking?._id) {
+      try {
+        await dispatch(deleteBooking(currentBooking._id)).unwrap();
+        setIsDeleteDialogOpen(false);
+        dispatch(setCurrentBooking(null));
+        toast.success("Đặt lịch đã được xóa thành công");
+      } catch (error) {
+        console.error("Error deleting booking:", error);
+      }
     }
-    setIsFormOpen(false);
+  };
+
+  const handleSubmitBooking = async (bookingData: Booking) => {
+    try {
+      console.log("Booking data:", bookingData);
+      if (bookingData._id) {
+        // Cập nhật đặt lịch hiện có
+        const updateData: UpdateBookingRequest =
+          bookingData as UpdateBookingRequest;
+        await dispatch(updateBooking(updateData)).unwrap();
+        toast.success("Cập nhật đặt lịch thành công");
+      } else {
+        // Thêm đặt lịch mới
+        const createData: CreateBookingRequest =
+          bookingData as CreateBookingRequest;
+        await dispatch(createBooking(createData)).unwrap();
+        toast.success("Tạo đặt lịch mới thành công");
+      }
+      setIsFormOpen(false);
+    } catch (error) {
+      console.error("Error submitting booking:", error);
+    }
   };
 
   return (
@@ -202,16 +172,22 @@ const Bookings = () => {
           </div>
 
           <TabsContent value="list" className="space-y-4">
-            <BookingsTable
-              bookings={bookings}
-              onEdit={handleEditBooking}
-              onAdd={handleAddBooking}
-              onDelete={handleDeleteBooking}
-            />
+            {isLoading && bookings.length === 0 ? (
+              <div className="flex justify-center items-center h-64">
+                <p>Đang tải dữ liệu...</p>
+              </div>
+            ) : (
+              <BookingsTable
+                bookings={bookings}
+                onEdit={handleEditBooking}
+                onAdd={handleAddBooking}
+                onDelete={handleDeleteBooking}
+              />
+            )}
           </TabsContent>
 
           <TabsContent value="calendar">
-            <CalendarView bookings={bookings} staff={mockStaff} />
+            <CalendarView bookings={bookings} staff={staff} />
           </TabsContent>
         </Tabs>
       </div>
@@ -233,16 +209,16 @@ const Bookings = () => {
             initialData={currentBooking}
             onSubmit={handleSubmitBooking}
             onCancel={() => setIsFormOpen(false)}
-            services={mockServices}
-            staff={mockStaff}
+            services={shortServices}
+            staff={staff}
           />
         </DialogContent>
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog
-        open={Boolean(bookingToDelete)}
-        onOpenChange={(open) => !open && setBookingToDelete(null)}
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
       >
         <AlertDialogContent>
           <AlertDialogHeader>

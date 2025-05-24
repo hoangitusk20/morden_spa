@@ -1,5 +1,4 @@
-
-import { useState } from 'react';
+import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -11,31 +10,30 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Edit, Trash, Plus } from "lucide-react";
-import { Input } from '@/components/ui/input';
-
-interface Service {
-  id: string;
-  title: string;
-  category: string;
-  duration: string;
-  price: number;
-}
+import { Input } from "@/components/ui/input";
+import { ServiceData } from "@/shared/type";
 
 interface ServicesTableProps {
-  services: Service[];
+  services: ServiceData[];
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
   onAdd: () => void;
 }
 
-const ServicesTable: React.FC<ServicesTableProps> = ({ services, onEdit, onDelete, onAdd }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  
-  const filteredServices = services.filter(service => 
-    service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    service.category.toLowerCase().includes(searchTerm.toLowerCase())
+const ServicesTable: React.FC<ServicesTableProps> = ({
+  services,
+  onEdit,
+  onDelete,
+  onAdd,
+}) => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredServices = services.filter(
+    (service) =>
+      service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      service.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  
+
   return (
     <div className="data-table-container">
       <div className="flex justify-between items-center p-4 border-b border-border">
@@ -67,7 +65,7 @@ const ServicesTable: React.FC<ServicesTableProps> = ({ services, onEdit, onDelet
           </TableHeader>
           <TableBody>
             {filteredServices.map((service) => (
-              <TableRow key={service.id}>
+              <TableRow key={service._id}>
                 <TableCell className="font-medium">{service.title}</TableCell>
                 <TableCell>
                   <Badge variant="outline" className="bg-primary/5">
@@ -78,10 +76,19 @@ const ServicesTable: React.FC<ServicesTableProps> = ({ services, onEdit, onDelet
                 <TableCell>${service.price.toFixed(2)}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
-                    <Button variant="outline" size="sm" onClick={() => onEdit(service.id)}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => onEdit(service._id)}
+                    >
                       <Edit className="h-4 w-4" />
                     </Button>
-                    <Button variant="outline" size="sm" className="text-destructive hover:text-destructive" onClick={() => onDelete(service.id)}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="text-destructive hover:text-destructive"
+                      onClick={() => onDelete(service._id)}
+                    >
                       <Trash className="h-4 w-4" />
                     </Button>
                   </div>

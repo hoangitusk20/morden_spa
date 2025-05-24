@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import AdminLayout from "../components/layouts/AdminLayout";
 import StaffTable from "../components/staff/StaffTable";
 import StaffForm from "../components/staff/StaffForm";
@@ -20,98 +21,127 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { StaffMember } from "@/shared/type";
-
-// Mock data
-const mockStaff = [
-  {
-    id: "1",
-    name: "Emma Johnson",
-    email: "emma.j@example.com",
-    phone: "(555) 123-4567",
-    position: "massage_therapist",
-    specialties: ["massage", "wellness"],
-  },
-  {
-    id: "2",
-    name: "Michael Chen",
-    email: "michael.c@example.com",
-    phone: "(555) 234-5678",
-    position: "esthetician",
-    specialties: ["facial", "body"],
-  },
-  {
-    id: "3",
-    name: "Sophia Rodriguez",
-    email: "sophia.r@example.com",
-    phone: "(555) 345-6789",
-    position: "massage_therapist",
-    specialties: ["massage", "wellness"],
-  },
-  {
-    id: "4",
-    name: "James Wilson",
-    email: "james.w@example.com",
-    phone: "(555) 456-7890",
-    position: "wellness_coach",
-    specialties: ["wellness"],
-  },
-  {
-    id: "5",
-    name: "Olivia Taylor",
-    email: "olivia.t@example.com",
-    phone: "(555) 567-8901",
-    position: "hair_stylist",
-    specialties: ["hair", "makeup"],
-  },
-];
+import { StaffMember, UpdateStaffRequest } from "@/shared/type";
+import { AppDispatch } from "../redux/store";
+import {
+  fetchStaff,
+  createStaff,
+  updateStaff,
+  deleteStaff,
+  setCurrentStaff,
+  selectAllStaff,
+  selectStaffLoading,
+  selectStaffError,
+  selectCurrentStaff,
+} from "../redux/features/staffSlice";
 
 const Staff = () => {
-  const [staff, setStaff] = useState(mockStaff);
+  const dispatch = useDispatch<AppDispatch>();
+  const staffMembers = useSelector(selectAllStaff);
+  const isLoading = useSelector(selectStaffLoading);
+  const error = useSelector(selectStaffError);
+  const currentStaff = useSelector(selectCurrentStaff);
+
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [currentStaff, setCurrentStaff] = useState<StaffMember>(null);
-  const [staffToDelete, setStaffToDelete] = useState<string | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  // Fetch staff when component mounts
+  useEffect(() => {
+    dispatch(fetchStaff());
+  }, [dispatch]);
+
+  useEffect(() => {
+    console.log("staffMembers", staffMembers);
+  }, [staffMembers]);
+  // Show error message if there is one
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
 
   const handleAddClick = () => {
-    setCurrentStaff(null);
+    dispatch(
+      setCurrentStaff({
+        name: "",
+        email: "",
+        phone: "",
+        specialties: [],
+      })
+    );
     setIsFormOpen(true);
   };
 
   const handleEditClick = (id: string) => {
-    const staffToEdit = staff.find((member) => member.id === id);
-    setCurrentStaff(staffToEdit);
-    setIsFormOpen(true);
+    const staffToEdit = staffMembers.find((staff) => staff._id === id);
+    if (staffToEdit) {
+      dispatch(setCurrentStaff(staffToEdit));
+      setIsFormOpen(true);
+    }
   };
 
   const handleDeleteClick = (id: string) => {
-    setStaffToDelete(id);
-  };
-
-  const confirmDelete = () => {
+    const staffToDelete = staffMembers.find((staff) => staff._id === id);
     if (staffToDelete) {
-      setStaff((prev) => prev.filter((member) => member.id !== staffToDelete));
-      toast.success("Staff member deleted successfully");
-      setStaffToDelete(null);
+      dispatch(setCurrentStaff(staffToDelete));
+      setIsDeleteDialogOpen(true);
     }
   };
 
-  const handleSubmit = (staffData: StaffMember) => {
-    if (staffData.id) {
-      // Update existing staff
-      setStaff((prev) =>
-        prev.map((member) => (member.id === staffData.id ? staffData : member))
-      );
-      toast.success("Staff member updated successfully");
-    } else {
-      // Add new staff with a generated ID
-      const newStaff = {
-        ...staffData,
-        id: `${staff.length + 1}`,
-      };
-      setStaff((prev) => [...prev, newStaff]);
-      toast.success("Staff member added successfully");
+  const handleSubmit = async (staffData: StaffMember) => {
+    try {
+      if (staffData._id) {
+        // Update existing staff
+        const updateData: UpdateStaffRequest = {
+          _id: staffData._id,
+          name: staffData.name,
+          email: staffData.email,
+          phone: staffData.phone,
+          specialties: staffData.specialties,
+        };
+
+        if (selectedFile) {
+          updateData.avatar = selectedFile.name;
+        }
+
+        await dispatch(updateStaff(updateData)).unwrap();
+        toast.success("Staff member updated successfully");
+      } else {
+        // Add new staff
+        await dispatch(
+          createStaff({
+            name: staffData.name,
+            email: staffData.email,
+            phone: staffData.phone,
+            specialties: staffData.specialties,
+            avatar: selectedFile.name || undefined,
+          })
+        ).unwrap();
+        toast.success("Staff member added successfully");
+      }
+      setIsFormOpen(false);
+      setSelectedFile(null);
+    } catch (error) {
+      console.error("Error submitting staff:", error);
     }
-    setIsFormOpen(false);
+  };
+
+  const handleDelete = async () => {
+    if (currentStaff?._id) {
+      try {
+        await dispatch(deleteStaff(currentStaff._id)).unwrap();
+        setIsDeleteDialogOpen(false);
+        dispatch(setCurrentStaff(null));
+        toast.success("Staff member deleted successfully");
+      } catch (error) {
+        console.error("Error deleting staff:", error);
+      }
+    }
+  };
+
+  const handleFileChange = (file: File) => {
+    setSelectedFile(file);
   };
 
   return (
@@ -126,52 +156,63 @@ const Staff = () => {
           </p>
         </div>
 
-        <StaffTable
-          staffMembers={staff}
-          onEdit={handleEditClick}
-          onAdd={handleAddClick}
-          onDelete={handleDeleteClick}
-        />
+        {isLoading && staffMembers.length === 0 ? (
+          <div className="flex justify-center items-center h-64">
+            <p>Loading data...</p>
+          </div>
+        ) : (
+          <StaffTable
+            staffMembers={staffMembers}
+            onEdit={handleEditClick}
+            onAdd={handleAddClick}
+            onDelete={handleDeleteClick}
+          />
+        )}
 
         {/* Staff Form Dialog */}
         <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
           <DialogContent className="sm:max-w-[800px]">
             <DialogHeader>
               <DialogTitle>
-                {currentStaff ? "Edit Staff Member" : "Add New Staff Member"}
+                {currentStaff?._id
+                  ? "Edit Staff Member"
+                  : "Add New Staff Member"}
               </DialogTitle>
               <DialogDescription>
-                {currentStaff
+                {currentStaff?._id
                   ? "Make changes to the staff member's information."
                   : "Fill in the details to add a new staff member."}
               </DialogDescription>
             </DialogHeader>
-            <StaffForm
-              initialData={currentStaff}
-              onSubmit={handleSubmit}
-              onCancel={() => setIsFormOpen(false)}
-            />
+            {currentStaff && (
+              <StaffForm
+                initialData={currentStaff}
+                onSubmit={handleSubmit}
+                onCancel={() => setIsFormOpen(false)}
+              />
+            )}
           </DialogContent>
         </Dialog>
 
         {/* Delete Confirmation Dialog */}
         <AlertDialog
-          open={Boolean(staffToDelete)}
-          onOpenChange={(open) => !open && setStaffToDelete(null)}
+          open={isDeleteDialogOpen}
+          onOpenChange={setIsDeleteDialogOpen}
         >
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Are you sure?</AlertDialogTitle>
               <AlertDialogDescription>
                 This action cannot be undone. This will permanently delete the
-                staff member and remove their data from the system.
+                staff member "{currentStaff?.name}" and remove their data from
+                the system.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
-                onClick={confirmDelete}
-                className="bg-red-500 hover:bg-red-600"
+                onClick={handleDelete}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               >
                 Delete
               </AlertDialogAction>

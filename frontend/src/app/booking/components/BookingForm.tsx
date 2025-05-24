@@ -163,21 +163,12 @@ export default function BookingForm() {
           Personal Information
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           <div className="space-y-2">
-            <Label htmlFor="firstName">First Name</Label>
+            <Label htmlFor="customer">Name</Label>
             <Input
-              id="firstName"
-              placeholder="Enter your first name"
-              className="h-12 bg-white"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="lastName">Last Name</Label>
-            <Input
-              id="lastName"
-              placeholder="Enter your last name"
+              id="customer"
+              placeholder="Enter your name"
               className="h-12 bg-white"
             />
           </div>

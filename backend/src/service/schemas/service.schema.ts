@@ -2,11 +2,11 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 export enum Category {
-  HAIR = 'Hair',
-  NAILS = 'Nails',
-  MASSAGE = 'Massage',
-  FACIAL = 'Facial',
-  BODY = 'Body',
+  HAIR = 'HAIR',
+  NAILS = 'NAILS',
+  MASSAGE = 'MASSAGE',
+  FACIAL = 'FACIAL',
+  BODY = 'BODY',
 }
 export type ServiceDocument = Service & Document;
 

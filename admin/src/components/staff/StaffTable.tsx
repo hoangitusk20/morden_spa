@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Edit, Plus, Trash2 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { StaffMember } from "@/shared/type";
 
 interface StaffTableProps {
@@ -37,10 +36,8 @@ const StaffTable: React.FC<StaffTableProps> = ({
       staff && // Add null check for staff
       staff.name &&
       staff.email &&
-      staff.position && // Add null checks for required properties
       (staff.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        staff.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        staff.position.toLowerCase().includes(searchTerm.toLowerCase()))
+        staff.email.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   return (
@@ -64,7 +61,6 @@ const StaffTable: React.FC<StaffTableProps> = ({
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
-              <TableHead>Position</TableHead>
               <TableHead>Contact</TableHead>
               <TableHead>Specialties</TableHead>
               <TableHead className="text-right">Actions</TableHead>
@@ -73,11 +69,10 @@ const StaffTable: React.FC<StaffTableProps> = ({
           <TableBody>
             {filteredStaff.length > 0 ? (
               filteredStaff.map((staff) => (
-                <TableRow key={staff?.id || "unknown"}>
+                <TableRow key={staff?._id || "unknown"}>
                   <TableCell className="font-medium">
                     {staff?.name || "N/A"}
                   </TableCell>
-                  <TableCell>{staff?.position || "N/A"}</TableCell>
                   <TableCell>
                     <div className="text-sm">{staff?.email || "N/A"}</div>
                     <div className="text-sm text-muted-foreground">
@@ -105,12 +100,12 @@ const StaffTable: React.FC<StaffTableProps> = ({
 
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-1">
-                      {staff?.id && (
+                      {staff?._id && (
                         <>
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => onEdit(staff.id)}
+                            onClick={() => onEdit(staff._id)}
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
@@ -118,7 +113,7 @@ const StaffTable: React.FC<StaffTableProps> = ({
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => onDelete(staff.id)}
+                              onClick={() => onDelete(staff._id)}
                               className="text-red-500"
                             >
                               <Trash2 className="h-4 w-4" />

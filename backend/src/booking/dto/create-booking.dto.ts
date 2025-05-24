@@ -3,17 +3,17 @@ import {
   IsNotEmpty,
   IsArray,
   ValidateNested,
-  IsNumber,
   IsOptional,
   IsEnum,
-  IsDateString,
+  IsNumber,
+  IsMongoId,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
-class ServiceDto {
+class ServiceItemDto {
   @IsString()
   @IsNotEmpty()
-  id: string;
+  _id: string; // giữ string để dễ dùng, có thể là ObjectId dưới dạng string
 
   @IsString()
   @IsNotEmpty()
@@ -26,22 +26,19 @@ class ServiceDto {
 export class CreateBookingDto {
   @IsString()
   @IsNotEmpty()
-  id: string;
-
-  @IsString()
-  @IsNotEmpty()
   customer: string;
 
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => ServiceDto)
-  services: ServiceDto[];
+  @Type(() => ServiceItemDto)
+  services: ServiceItemDto[];
 
   @IsOptional()
-  @IsString()
+  @IsMongoId()
   staff?: string | null;
 
-  @IsDateString()
+  @IsString()
+  @IsNotEmpty()
   date: string;
 
   @IsString()

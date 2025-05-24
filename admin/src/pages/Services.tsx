@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import AdminLayout from "../components/layouts/AdminLayout";
 import ServicesTable from "../components/services/ServicesTable";
 import ServiceForm from "../components/services/ServiceForm";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -21,121 +21,135 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { ServiceData } from "@/shared/type";
-
-// Mock data
-const mockServices = [
-  {
-    id: "s1",
-    title: "Deep Tissue Massage",
-    category: "massage",
-    duration: "60 minutes",
-    price: 95,
-    description: "A therapeutic massage targeting deeper muscle layers.",
-    detailedDescription:
-      "This massage uses slow strokes and deep finger pressure to relieve tension in the deeper layers of muscle and connective tissue. Ideal for chronic aches and pain or contracted areas such as a stiff neck, low back tightness, and sore shoulders.",
-  },
-  {
-    id: "s2",
-    title: "Facial Treatment",
-    category: "facial",
-    duration: "45 minutes",
-    price: 80,
-    description: "Rejuvenating facial with custom products.",
-    detailedDescription:
-      "This facial treatment uses premium skincare products customized to your skin type. It includes cleansing, exfoliation, extraction if needed, facial massage, mask, and moisturizer application. Leaves skin refreshed and glowing.",
-  },
-  {
-    id: "s3",
-    title: "Hot Stone Therapy",
-    category: "massage",
-    duration: "90 minutes",
-    price: 120,
-    description: "Relaxing massage using heated stones.",
-    detailedDescription:
-      "Heated volcanic stones are placed on key points of the body and used as massage tools. The heat from the stones helps to relax muscles more deeply, allowing for more effective tissue and muscle manipulation. Perfect for stress relief and deep relaxation.",
-  },
-  {
-    id: "s4",
-    title: "Aromatherapy",
-    category: "wellness",
-    duration: "60 minutes",
-    price: 85,
-    description: "Therapeutic essential oil massage.",
-    detailedDescription:
-      "This massage therapy incorporates essential oils derived from plants to enhance physical and psychological well-being. Different oils are used for different therapeutic effects, such as lavender for relaxation or eucalyptus for respiratory health.",
-  },
-  {
-    id: "s5",
-    title: "Body Scrub",
-    category: "body",
-    duration: "45 minutes",
-    price: 70,
-    description: "Exfoliating scrub for smooth, renewed skin.",
-    detailedDescription:
-      "A full-body exfoliation treatment that removes dead skin cells and stimulates circulation. Using a mixture of sea salt or sugar with aromatic oils, this treatment leaves skin smooth, soft, and renewed. Finished with a hydrating application of body lotion or oil.",
-  },
-];
+import { ServiceData, UpdateServiceRequest } from "@/shared/type";
+import { AppDispatch } from "../redux/store";
+import {
+  fetchServices,
+  createService,
+  updateService,
+  deleteService,
+  setCurrentService,
+  selectAllServices,
+  selectServicesLoading,
+  selectServicesError,
+  selectCurrentService,
+} from "../redux/features/serviceSlice";
 
 const Services = () => {
-  const [services, setServices] = useState(mockServices);
+  const dispatch = useDispatch<AppDispatch>();
+  const services = useSelector(selectAllServices);
+  const isLoading = useSelector(selectServicesLoading);
+  const error = useSelector(selectServicesError);
+  const currentService = useSelector(selectCurrentService);
+
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [currentService, setCurrentService] = useState<ServiceData>({
-    title: "",
-    duration: "60",
-    price: 0,
-    description: "",
-    detailedDescription: "",
-    category: "",
-  });
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  // Lấy danh sách dịch vụ khi component mount
+  useEffect(() => {
+    dispatch(fetchServices());
+  }, [dispatch]);
+
+  // Hiển thị thông báo lỗi nếu có
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
 
   const handleAddClick = () => {
+    dispatch(
+      setCurrentService({
+        title: "",
+        duration: 60,
+        price: 0,
+        description: "",
+        detailDescription: "",
+        category: "",
+      })
+    );
     setIsFormOpen(true);
   };
 
   const handleEditClick = (id: string) => {
-    const serviceToEdit = services.find((service) => service.id === id);
-    setCurrentService(serviceToEdit);
-    setIsFormOpen(true);
+    const serviceToEdit = services.find((service) => service._id === id);
+    if (serviceToEdit) {
+      dispatch(setCurrentService(serviceToEdit));
+      setIsFormOpen(true);
+    }
   };
 
   const handleDeleteClick = (id: string) => {
-    const serviceToDelete = services.find((service) => service.id === id);
-    setCurrentService(serviceToDelete);
-    setIsDeleteDialogOpen(true);
+    const serviceToDelete = services.find((service) => service._id === id);
+    if (serviceToDelete) {
+      dispatch(setCurrentService(serviceToDelete));
+      setIsDeleteDialogOpen(true);
+    }
   };
 
-  const handleSubmit = (serviceData: ServiceData) => {
-    if (serviceData.id) {
-      // Update existing service
-      setServices((prev) =>
-        prev.map((service) =>
-          service.id === serviceData.id ? serviceData : service
-        )
-      );
-      toast.success("Service updated successfully");
-    } else {
-      // Add new service with a generated ID
-      const newService = {
-        ...serviceData,
-        id: `s${services.length + 1}`,
-      };
-      setServices((prev) => [...prev, newService]);
-      toast.success("Service added successfully");
+  const handleSubmit = async (serviceData: ServiceData) => {
+    if (!selectedFile && !serviceData._id) {
+      toast.error("Vui lòng chọn hình ảnh cho dịch vụ");
+      return;
     }
-    setIsFormOpen(false);
+
+    try {
+      if (serviceData._id) {
+        // Cập nhật dịch vụ hiện có
+        const updateData: UpdateServiceRequest = {
+          _id: serviceData._id,
+          title: serviceData.title,
+          duration: serviceData.duration,
+          price: serviceData.price,
+          description: serviceData.description,
+          detailDescription: serviceData.detailDescription,
+          category: serviceData.category.toUpperCase(),
+        };
+
+        if (selectedFile) {
+          updateData.image = selectedFile;
+        }
+
+        await dispatch(updateService(updateData)).unwrap();
+        toast.success("Cập nhật dịch vụ thành công");
+      } else {
+        // Thêm dịch vụ mới
+        await dispatch(
+          createService({
+            title: serviceData.title,
+            duration: serviceData.duration,
+            price: serviceData.price,
+            description: serviceData.description,
+            detailDescription: serviceData.detailDescription,
+            category: serviceData.category.toUpperCase(),
+            image: selectedFile as File,
+          })
+        ).unwrap();
+        toast.success("Thêm dịch vụ mới thành công");
+      }
+      setIsFormOpen(false);
+      setSelectedFile(null);
+    } catch (error) {
+      console.error("Error submitting service:", error);
+    }
   };
 
-  const handleDelete = () => {
-    if (currentService) {
-      setServices((prev) =>
-        prev.filter((service) => service.id !== currentService.id)
-      );
-      setIsDeleteDialogOpen(false);
-      setCurrentService(null);
-      toast.success("Service deleted successfully");
+  const handleDelete = async () => {
+    if (currentService?._id) {
+      try {
+        await dispatch(deleteService(currentService._id)).unwrap();
+        setIsDeleteDialogOpen(false);
+        dispatch(setCurrentService(null));
+        toast.success("Xóa dịch vụ thành công");
+      } catch (error) {
+        console.error("Error deleting service:", error);
+      }
     }
+  };
+
+  const handleFileChange = (file: File) => {
+    setSelectedFile(file);
   };
 
   return (
@@ -143,38 +157,47 @@ const Services = () => {
       <div className="space-y-6 animate-fade-in">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">
-            Services Management
+            Service Management
           </h1>
           <p className="text-muted-foreground">
-            Manage the services offered at your spa.
+            Manage your services here. Add, edit, and delete services as needed.
           </p>
         </div>
 
-        <ServicesTable
-          services={services}
-          onEdit={handleEditClick}
-          onDelete={handleDeleteClick}
-          onAdd={handleAddClick}
-        />
+        {isLoading && services.length === 0 ? (
+          <div className="flex justify-center items-center h-64">
+            <p>Đang tải dữ liệu...</p>
+          </div>
+        ) : (
+          <ServicesTable
+            services={services}
+            onEdit={handleEditClick}
+            onDelete={handleDeleteClick}
+            onAdd={handleAddClick}
+          />
+        )}
 
         {/* Service Form Dialog */}
         <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
           <DialogContent className="sm:max-w-[800px]">
             <DialogHeader>
               <DialogTitle>
-                {currentService ? "Edit Service" : "Add New Service"}
+                {currentService?._id ? "Update Service" : "Create Service"}
               </DialogTitle>
               <DialogDescription>
-                {currentService
-                  ? "Make changes to the existing service."
-                  : "Fill in the details to create a new service."}
+                {currentService?._id
+                  ? "Update service information here."
+                  : "Add a new service to the system."}
               </DialogDescription>
             </DialogHeader>
-            <ServiceForm
-              initialData={currentService}
-              onSubmit={handleSubmit}
-              onCancel={() => setIsFormOpen(false)}
-            />
+            {currentService && (
+              <ServiceForm
+                initialData={currentService}
+                onSubmit={handleSubmit}
+                onCancel={() => setIsFormOpen(false)}
+                onFileChange={handleFileChange}
+              />
+            )}
           </DialogContent>
         </Dialog>
 
@@ -188,7 +211,7 @@ const Services = () => {
               <AlertDialogTitle>Are you sure?</AlertDialogTitle>
               <AlertDialogDescription>
                 This action cannot be undone. This will permanently delete the
-                service "{currentService?.title}" and remove it from the system.
+                service."{currentService?.title}" and remove it from the system.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

@@ -12,6 +12,7 @@ export class Booking {
   @Prop({
     type: [
       {
+        _id: { type: String, required: true },
         name: { type: String, required: true },
         price: { type: Number, required: true },
       },
@@ -19,7 +20,7 @@ export class Booking {
     required: true,
   })
   services: {
-    id: string;
+    _id: string;
     name: string;
     price: number;
   }[];

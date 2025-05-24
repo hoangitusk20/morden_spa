@@ -1,7 +1,12 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setCredentials } from "../redux/features/authSlice";
+import {
+  loginUser,
+  selectAuthLoading,
+  selectAuthError,
+  clearError,
+} from "../redux/features/authSlice";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,48 +20,34 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { AppDispatch } from "../redux/store";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+
+  const isLoading = useSelector(selectAuthLoading);
+  const error = useSelector(selectAuthError);
+
+  // Clear error when component unmounts or when inputs change
+  useEffect(() => {
+    return () => {
+      dispatch(clearError());
+    };
+  }, [dispatch, username, password]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setIsLoading(true);
 
-    try {
-      // In a real app, you would make an API call here
-      // For demo purposes, we'll just simulate a successful login
-      if (email === "admin@example.com" && password === "password") {
-        // Simulate API response
-        const userData = {
-          id: "1",
-          name: "Admin User",
-          email: "admin@example.com",
-          role: "admin",
-        };
+    // Dispatch login thunk action
+    const resultAction = await dispatch(loginUser({ username, password }));
 
-        const token = "demo-token-12345";
-
-        // Update Redux state
-        dispatch(setCredentials({ user: userData, token }));
-
-        // Redirect to dashboard
-        navigate("/");
-      } else {
-        setError("Invalid email or password");
-      }
-    } catch (err) {
-      setError("Login failed. Please try again.");
-      console.error("Login error:", err);
-    } finally {
-      setIsLoading(false);
+    if (loginUser.fulfilled.match(resultAction)) {
+      // Redirect to dashboard on successful login
+      navigate("/");
     }
   };
 
@@ -69,7 +60,7 @@ const Login = () => {
               Spa Admin Login
             </CardTitle>
             <CardDescription className="text-center">
-              Enter your credentials to access the admin panel
+              Nhập thông tin đăng nhập để truy cập trang quản trị
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -82,18 +73,18 @@ const Login = () => {
             <form onSubmit={handleSubmit}>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="username">Tên đăng nhập</Label>
                   <Input
-                    id="email"
-                    type="email"
-                    placeholder="admin@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    id="username"
+                    type="text"
+                    placeholder="admin"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">Mật khẩu</Label>
                   <Input
                     id="password"
                     type="password"
@@ -109,13 +100,13 @@ const Login = () => {
                 className="w-full mt-6"
                 disabled={isLoading}
               >
-                {isLoading ? "Signing in..." : "Sign In"}
+                {isLoading ? "Đang đăng nhập..." : "Đăng nhập"}
               </Button>
             </form>
           </CardContent>
           <CardFooter className="flex justify-center">
             <p className="text-sm text-muted-foreground">
-              Demo credentials: admin@example.com / password
+              Thông tin đăng nhập mẫu: admin / password
             </p>
           </CardFooter>
         </Card>

@@ -7,14 +7,16 @@ import {
   Param,
   Delete,
   HttpCode,
+  Query,
 } from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
+import { Booking } from './schemas/booking.schema';
 
-@Controller('bookings')
+@Controller('booking')
 export class BookingController {
   constructor(private readonly bookingService: BookingService) {}
 
@@ -25,8 +27,13 @@ export class BookingController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async findAll() {
-    return await this.bookingService.findAll();
+  async findAll(@Query() query): Promise<Booking[]> {
+    return this.bookingService.findAll({
+      search: query.search,
+      status: query.status,
+      fromDate: query.fromDate,
+      toDate: query.toDate,
+    });
   }
 
   @Get(':id')
