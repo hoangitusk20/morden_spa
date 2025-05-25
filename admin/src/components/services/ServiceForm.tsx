@@ -10,7 +10,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { ServiceData } from "@/shared/type";
 
 interface ServiceFormProps {
@@ -27,6 +33,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
   onFileChange,
 }) => {
   const [formData, setFormData] = useState(initialData);
+  console.log("InitalData:", initialData);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -35,18 +42,18 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSelectChange = <T extends keyof typeof formData>(
-    name: T,
-    value: (typeof formData)[T]
-  ) => {
+  const handleSelectChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Handle image upload logic
     const file = e.target.files?.[0];
     if (file) {
       onFileChange(file);
+      setFormData((prev) => ({ ...prev, image: URL.createObjectURL(file) }));
     }
+    console.log("Image selected:", e.target.files?.[0]);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -60,7 +67,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="title">Service name</Label>
+              <Label htmlFor="title">Service Name</Label>
               <Input
                 id="title"
                 name="title"
@@ -77,14 +84,14 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
                 onValueChange={(value) => handleSelectChange("category", value)}
               >
                 <SelectTrigger id="category">
-                  <SelectValue placeholder="Choose category" />
+                  <SelectValue placeholder="Select category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Massage">Massage</SelectItem>
-                  <SelectItem value="Facial">Facial</SelectItem>
-                  <SelectItem value="Body">Body Treatment</SelectItem>
-                  <SelectItem value="Hair">Hair & Beauty</SelectItem>
-                  <SelectItem value="Nails">Nails</SelectItem>
+                  <SelectItem value="MASSAGE">Massage</SelectItem>
+                  <SelectItem value="FACIAL">Facial</SelectItem>
+                  <SelectItem value="BODY">Body Treatment</SelectItem>
+                  <SelectItem value="HAIR">Hair & Beauty</SelectItem>
+                  <SelectItem value="NAILS">Nails</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -93,19 +100,17 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
               <Label htmlFor="duration">Duration (minutes)</Label>
               <Select
                 value={String(formData.duration)}
-                onValueChange={(value) =>
-                  handleSelectChange("duration", parseInt(value, 10))
-                }
+                onValueChange={(value) => handleSelectChange("duration", value)}
               >
                 <SelectTrigger id="duration">
-                  <SelectValue placeholder="Choose duration" />
+                  <SelectValue placeholder="Select duration" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="30">30 min</SelectItem>
-                  <SelectItem value="45">45 min</SelectItem>
-                  <SelectItem value="60">60 min</SelectItem>
-                  <SelectItem value="90">90 min</SelectItem>
-                  <SelectItem value="120">120 min</SelectItem>
+                  <SelectItem value="30">30 minutes</SelectItem>
+                  <SelectItem value="45">45 minutes</SelectItem>
+                  <SelectItem value="60">60 minutes</SelectItem>
+                  <SelectItem value="90">90 minutes</SelectItem>
+                  <SelectItem value="120">120 minutes</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -117,6 +122,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
                 name="price"
                 type="number"
                 min="0"
+                step="0.01"
                 value={formData.price}
                 onChange={handleChange}
                 required
@@ -125,51 +131,46 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">Short Description</Label>
             <Textarea
               id="description"
               name="description"
               rows={2}
               value={formData.description}
               onChange={handleChange}
-              placeholder="Short description of the service"
+              placeholder="Brief description for service listings"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="detailedDescription">Detail description</Label>
+            <Label htmlFor="detailDescription">Detail Description</Label>
             <Textarea
-              id="detailedDescription"
-              name="detailedDescription"
+              id="detailDescription"
+              name="detailDescription"
               rows={4}
               value={formData.detailDescription}
               onChange={handleChange}
-              placeholder="Detailed description of the service"
+              placeholder="In-depth description including benefits, procedures, etc."
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="image">Service image</Label>
+            <Label htmlFor="image">Service Image</Label>
             <Input
               id="image"
               name="image"
               type="file"
               accept="image/*"
               onChange={handleImageChange}
-              className="cursor-pointer"
             />
             {formData.image && (
               <div className="mt-2">
-                <p className="text-sm text-muted-foreground">
-                  Current Image: {formData.image}
-                </p>
-                {formData.image.startsWith("http") && (
-                  <img
-                    src={formData.image}
-                    alt="Preview"
-                    className="mt-2 max-h-40 rounded-md"
-                  />
-                )}
+                <p className="text-sm text-muted-foreground">Current image:</p>
+                <img
+                  src={formData.image}
+                  alt="Service"
+                  className="max-w-[200px] rounded-md"
+                />
               </div>
             )}
           </div>
@@ -177,10 +178,10 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
 
         <CardFooter className="flex justify-between">
           <Button type="button" variant="outline" onClick={onCancel}>
-            Hủy
+            Cancel
           </Button>
           <Button type="submit">
-            {initialData._id ? "Update service" : "Create service"}
+            {initialData._id ? "Update Service" : "Create Service"}
           </Button>
         </CardFooter>
       </form>

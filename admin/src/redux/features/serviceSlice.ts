@@ -82,16 +82,7 @@ export const createService = createAsyncThunk(
 
       const data: ServiceResponse = await response.json();
 
-      return {
-        id: data._id,
-        title: data.title,
-        duration: data.duration.toString(),
-        price: data.price,
-        description: data.description,
-        detailDescription: data.detailDescription,
-        category: data.category.toLowerCase(),
-        image: data.image,
-      };
+      return data;
     } catch (error) {
       return rejectWithValue(
         error instanceof Error
@@ -140,16 +131,7 @@ export const updateService = createAsyncThunk(
 
       const data: ServiceResponse = await response.json();
 
-      return {
-        id: data._id,
-        title: data.title,
-        duration: data.duration,
-        price: data.price,
-        description: data.description,
-        detailDescription: data.detailDescription,
-        category: data.category.toLowerCase(),
-        image: data.image,
-      };
+      return data;
     } catch (error) {
       return rejectWithValue(
         error instanceof Error
@@ -235,7 +217,6 @@ const serviceSlice = createSlice({
         const payload = action.payload;
         const newService = {
           ...payload,
-          id: Number(payload.id),
           price: Number(payload.price),
           duration: Number(payload.duration),
         };
@@ -254,7 +235,7 @@ const serviceSlice = createSlice({
       })
       .addCase(updateService.fulfilled, (state, action) => {
         const index = state.services.findIndex(
-          (service) => service._id === action.payload.id
+          (service) => service._id === action.payload._id
         );
         if (index !== -1) {
           state.services[index] = action.payload;

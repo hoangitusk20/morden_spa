@@ -89,6 +89,7 @@ const Services = () => {
   };
 
   const handleSubmit = async (serviceData: ServiceData) => {
+    console.log("Service data:", serviceData);
     if (!selectedFile && !serviceData._id) {
       toast.error("Vui lòng chọn hình ảnh cho dịch vụ");
       return;
