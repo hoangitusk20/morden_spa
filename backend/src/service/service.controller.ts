@@ -43,6 +43,11 @@ export class ServiceController {
     return this.serviceService.findOne(id);
   }
 
+  @Get(':id/related')
+  async getRelated(@Param('id') id: string): Promise<ServiceResponseDto[]> {
+    return this.serviceService.getRelatedServices(id);
+  }
+
   @Put(':id')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('image'))

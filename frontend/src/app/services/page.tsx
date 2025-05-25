@@ -1,7 +1,8 @@
 import Banner from "@/shared/Banner";
-import services from "@/shared/Mockdata/Services";
 import ServiceList from "./components/ServiceList";
+import { getServiceData } from "@/lib/getServiceData";
 
+const serviceData = await getServiceData();
 export default function ServicePage() {
   return (
     <div className="mt-20">
@@ -11,7 +12,7 @@ export default function ServicePage() {
         description="Discover our comprehensive range of luxurious treatments designed to nurture your body, mind, and spirit."
       />
 
-      <ServiceList services={services} />
+      <ServiceList services={serviceData} />
     </div>
   );
 }

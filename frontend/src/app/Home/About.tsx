@@ -25,6 +25,7 @@ const AboutSection = () => {
               alt="Spa interior"
               width={800}
               height={600}
+              priority
               className="w-full h-auto rounded-lg shadow-lg"
             />
             <div className="hidden lg:block absolute -bottom-8 -right-8 w-64 h-48">
@@ -32,6 +33,7 @@ const AboutSection = () => {
                 src="/images/about2.avif"
                 alt="Spa treatment"
                 fill
+                sizes={"400px"}
                 className="object-cover rounded-lg shadow-lg"
               />
             </div>

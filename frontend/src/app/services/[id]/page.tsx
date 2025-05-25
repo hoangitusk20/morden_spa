@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
-import services from "@/shared/Mockdata/Services";
+import { getRelatedService, getServiceDetail } from "@/lib/getServiceData";
 import ServiceCard from "@/shared/ServiceCard";
+import { Service } from "@/shared/type";
 import { ArrowLeft, Clock, DollarSign, ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,17 +11,12 @@ export default async function ServiceDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const id = (await params).id;
-  const service = services.find((service) => service.id === id);
+  const service = await getServiceDetail((await params).id);
   if (!service) {
     return <div>Service not found</div>;
   }
-  const relatedServices = services.filter(
-    (s) => s.category === service.category && s.id !== service.id
-  );
-  const relatedServicesCount =
-    relatedServices.length > 4 ? 4 : relatedServices.length;
-  const relatedServicesToShow = relatedServices.slice(0, relatedServicesCount);
+  const relatedServices = await getRelatedService((await params).id);
+
   return (
     <div className="mt-20">
       <div className="pt-15 pb-20 bg-white">
@@ -76,9 +72,9 @@ export default async function ServiceDetailPage({
               </h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                {relatedServicesToShow.map((relatedService) => (
+                {relatedServices.map((relatedService) => (
                   <ServiceCard
-                    key={relatedService.id}
+                    key={relatedService._id}
                     service={relatedService}
                   />
                 ))}

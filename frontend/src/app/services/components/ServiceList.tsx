@@ -10,8 +10,8 @@ type ServiceListProps = {
 };
 
 const ServiceList = ({ services }: ServiceListProps) => {
-  const categories = ["All", "Massage", "Facial", "Body", "Hair", "Nails"];
-  const [activeCategory, setActiveCategory] = useState<string>("All");
+  const categories = ["ALL", "MASSAGE", "FACIAL", "BODY", "HAIR", "NAILS"];
+  const [activeCategory, setActiveCategory] = useState<string>("ALL");
   const [sortBy, setSortBy] = useState<string>("default");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
@@ -31,7 +31,7 @@ const ServiceList = ({ services }: ServiceListProps) => {
   const filteredAndSortedServices = useMemo(() => {
     // Filter by category
     const filtered =
-      activeCategory === "All"
+      activeCategory === "ALL"
         ? services
         : services.filter((service) => service.category === activeCategory);
 
@@ -105,7 +105,7 @@ const ServiceList = ({ services }: ServiceListProps) => {
           <AnimatePresence mode="wait">
             {filteredAndSortedServices.map((service) => (
               <motion.div
-                key={`${service.id}-${activeCategory}-${sortBy}`}
+                key={`${service._id}-${activeCategory}-${sortBy}`}
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 50 }}

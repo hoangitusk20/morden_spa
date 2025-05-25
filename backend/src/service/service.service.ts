@@ -87,4 +87,24 @@ export class ServiceService {
       throw new NotFoundException(`Service with id ${id} not found`);
     }
   }
+  async getRelatedServices(
+    id: string,
+    limit = 4,
+  ): Promise<ServiceResponseDto[]> {
+    const currentService = await this.serviceModel.findById(id).lean();
+
+    if (!currentService) {
+      throw new NotFoundException(`Service with id ${id} not found`);
+    }
+
+    const related = await this.serviceModel
+      .find({
+        _id: { $ne: id }, // loại trừ chính nó
+        category: currentService.category, // giả sử có field category
+      })
+      .limit(limit)
+      .lean();
+
+    return plainToInstance(ServiceResponseDto, related);
+  }
 }
