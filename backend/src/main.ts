@@ -7,7 +7,11 @@ async function bootstrap() {
 
   // Bật CORS
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:8080'], // Thêm các domain frontend của bạn
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:8080',
+      'https://ngocspa.vercel.app/',
+    ], // Thêm các domain frontend của bạn
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
   });
