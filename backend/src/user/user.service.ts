@@ -6,8 +6,8 @@ import { Injectable } from '@nestjs/common';
 export class UsersService {
   private readonly adminUser = {
     id: 1,
-    username: process.env.ADMIN_USERNAME,
-    password: process.env.ADMIN_PASSWORD,
+    username: process.env.ADMIN_USERNAME || 'no user',
+    password: process.env.ADMIN_PASSWORD || 'no admin',
   };
 
   async findOne(username: string) {
