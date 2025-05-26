@@ -4,6 +4,7 @@ const navLinks = [
   { name: "Home", path: "/" },
   { name: "About", path: "/about" },
   { name: "Services", path: "/services" },
+  { name: "Contact", path: "/contact" },
 ];
 
 const Footer = () => {
@@ -21,7 +22,7 @@ const Footer = () => {
           </p>
           <div className="flex space-x-4">
             <a
-              href="#"
+              href="https://www.facebook.com/lexuanhoang0303"
               className="text-gray-400 hover:text-spa-teal transition-colors"
             >
               <span className="sr-only">Facebook</span>
@@ -39,7 +40,7 @@ const Footer = () => {
               </svg>
             </a>
             <a
-              href="#"
+              href="https://www.instagram.com/lxhoangabcxyz/"
               className="text-gray-400 hover:text-spa-teal transition-colors"
             >
               <span className="sr-only">Instagram</span>
@@ -72,14 +73,6 @@ const Footer = () => {
                 </Link>
               </li>
             ))}
-            <li>
-              <Link
-                href={"/booking"}
-                className="hover:text-spa-teal transition-colors"
-              >
-                Book Appointment
-              </Link>
-            </li>
           </ul>
         </div>
 
@@ -103,7 +96,7 @@ const Footer = () => {
             </li>
             <li>
               <a href="#" className="hover:text-spa-teal transition-colors">
-                Wellness Packages
+                Nails
               </a>
             </li>
           </ul>
@@ -112,10 +105,10 @@ const Footer = () => {
         <div>
           <h3 className="font-medium text-gray-900 mb-4">Contact Us</h3>
           <ul className="space-y-3 text-gray-600">
-            <li>123 Relaxation Avenue</li>
-            <li>Serenity City, SC 12345</li>
-            <li>Phone: (555) 123-4567</li>
-            <li>Email: info@serenityspa.com</li>
+            <li>123 Nguyen Thi Ngau</li>
+            <li>Hoc Mon, Ho Chi Minh city</li>
+            <li>Phone: (+84) 389-530-320</li>
+            <li>Email: lexuanhoangx3@gmail.com</li>
           </ul>
         </div>
       </div>
