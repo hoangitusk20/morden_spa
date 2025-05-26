@@ -2,15 +2,29 @@
 import Banner from "@/shared/Banner";
 import BookingSummary from "./components/BookingSummary";
 import BookingForm from "./components/BookingForm";
-import { Suspense } from "react";
-
-export const metadata = {
-  title: "Ngoc Spa - Booking",
-  description:
-    "Complete your booking to secure your appointment at Ngoc Spa. Review your selected services and provide your information to finalize your booking.",
-};
+import { Suspense, useEffect } from "react";
 
 export default function Bookingpage() {
+  // Set metadata dynamically
+  useEffect(() => {
+    document.title = "Ngoc Spa - Booking";
+
+    // Update meta description
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute(
+        "content",
+        "Complete your booking to secure your appointment at Ngoc Spa. Review your selected services and provide your information to finalize your booking."
+      );
+    } else {
+      const newMeta = document.createElement("meta");
+      newMeta.name = "description";
+      newMeta.content =
+        "Complete your booking to secure your appointment at Ngoc Spa. Review your selected services and provide your information to finalize your booking.";
+      document.head.appendChild(newMeta);
+    }
+  }, []);
+
   return (
     <div className="my-20">
       <Banner

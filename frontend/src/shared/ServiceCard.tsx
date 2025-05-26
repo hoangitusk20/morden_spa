@@ -43,10 +43,13 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
           <Link
             href={`/services/${service._id}`}
             title={`Learn more about ${service.title}`}
-            className="py-2 mt-2 px-4 hover:border-b-2  hover:text-primary rounded-lg flex md:inline-flex justify-center md:justify-start"
+            className="py-2 mt-2 px-4 hover:border-b-2 hover:text-primary rounded-lg flex md:inline-flex justify-center md:justify-start"
           >
-            <span className="mr-2">Learn more</span>
-            <ArrowRight className="group-hover:ml-2  " />
+            <span className="mr-2">
+              Learn more
+              <span className="sr-only"> about {service.title}</span>
+            </span>
+            <ArrowRight className="group-hover:ml-2" />
           </Link>
 
           <AddToCartButton service={service} />
