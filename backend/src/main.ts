@@ -4,14 +4,11 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const allowedOrigins = process.env.FRONTEND_ORIGINS?.split(',') || [];
 
   // Bật CORS
   app.enableCors({
-    origin: [
-      'http://localhost:3000',
-      'http://localhost:8080',
-      'https://ngocspa.vercel.app/',
-    ], // Thêm các domain frontend của bạn
+    origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
   });
