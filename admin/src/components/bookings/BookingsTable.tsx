@@ -381,7 +381,7 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
                   <TableCell>
                     {staff.find(
                       (staffMember) => staffMember._id === booking.staff
-                    ).name || "Unassigned"}
+                    )?.name || "Unassigned"}
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
                     {booking.date} at {booking.time}
