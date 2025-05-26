@@ -15,22 +15,23 @@ function Persistor({ children }: { children: React.ReactNode }) {
   const hasHydratedOnce = useRef(false);
 
   useEffect(() => {
+    // Chỉ chạy ở client
     const persistedCart = loadState<Service[]>("cart") || [];
-    if (persistedCart.length > 0) {
-      dispatch(setCart(persistedCart));
-    }
+    dispatch(setCart(persistedCart));
     setIsHydrated(true);
   }, [dispatch]);
 
   useEffect(() => {
-    if (isHydrated) {
-      if (!hasHydratedOnce.current) {
-        hasHydratedOnce.current = true;
-        return;
-      }
+    if (isHydrated && hasHydratedOnce.current) {
       localStorage.setItem("cart", JSON.stringify(cartItems));
     }
+    if (!hasHydratedOnce.current) {
+      hasHydratedOnce.current = true;
+    }
   }, [cartItems, isHydrated]);
+
+  // ✅ Trì hoãn render cho tới khi hydrate xong
+  if (!isHydrated) return null;
 
   return <>{children}</>;
 }

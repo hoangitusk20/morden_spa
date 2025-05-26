@@ -9,3 +9,21 @@ export interface Service {
   category: string;
   quantity?: number;
 }
+
+export interface ServiceItem {
+  _id: string;
+  name: string;
+  price: number;
+  quantity: number;
+}
+
+export interface Booking {
+  customer: string;
+  services: ServiceItem[];
+  date: string;
+  time: string;
+  status: string;
+  amount: number;
+  phone?: string;
+  email?: string;
+}

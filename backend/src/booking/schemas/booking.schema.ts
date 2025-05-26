@@ -15,6 +15,7 @@ export class Booking {
         _id: { type: String, required: true },
         name: { type: String, required: true },
         price: { type: Number, required: true },
+        quantity: { type: Number, default: 1 }, // Default quantity to 1
       },
     ],
     required: true,
@@ -23,6 +24,7 @@ export class Booking {
     _id: string;
     name: string;
     price: number;
+    quantity: number; // Ensure quantity is always present
   }[];
 
   @Prop({

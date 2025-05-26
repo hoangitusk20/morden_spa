@@ -1,6 +1,5 @@
 "use client";
 import CartItem from "@/shared/CartItem";
-import { Service } from "@/shared/type";
 import { RootState } from "@/store";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
@@ -13,7 +12,7 @@ const BookingSummary = () => {
   }, 0);
 
   return (
-    <div className="w-full mx-auto p-6 bg-white]">
+    <div className="w-full mx-auto p-6 bg-white">
       <h1 className="text-4xl font-serif text-[#3c2415] mb-8">
         Booking Summary
       </h1>
@@ -23,7 +22,7 @@ const BookingSummary = () => {
         <div className="">
           <ul>
             {cart.map((item) => (
-              <CartItem key={item.id} item={item} />
+              <CartItem key={item._id} item={item} />
             ))}
           </ul>
           <div className="flex justify-between items-center mt-4 mb-4">

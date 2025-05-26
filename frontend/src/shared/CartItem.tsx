@@ -64,7 +64,7 @@ const CartItem = ({ item }: { item: Service }) => {
           ${item.quantity && item.price * item.quantity}
         </p>
         <button
-          onClick={() => removeItem(item.id)}
+          onClick={() => removeItem(item._id)}
           className="text-red-500 text-xs mt-2 hover:underline"
         >
           Xóa

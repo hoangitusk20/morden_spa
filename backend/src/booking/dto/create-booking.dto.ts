@@ -21,6 +21,9 @@ class ServiceItemDto {
 
   @IsNumber()
   price: number;
+
+  @IsNumber()
+  quantity: number;
 }
 
 export class CreateBookingDto {

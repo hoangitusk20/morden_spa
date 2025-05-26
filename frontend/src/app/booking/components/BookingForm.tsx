@@ -21,12 +21,29 @@ import {
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { createBooking } from "@/lib/createBooking";
+import { ServiceItem } from "@/shared/type";
+import { clearCart } from "@/store/slices/CartSlice";
 export default function BookingForm() {
   const [date, setDate] = useState<Date | undefined>();
   const [time, setTime] = useState<string>("");
+  const [customer, setCustomer] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [selectedHour, setSelectedHour] = useState<string>("");
   const [selectedMinute, setSelectedMinute] = useState<string>("");
   const [selectedPeriod, setSelectedPeriod] = useState<"AM" | "PM">("AM");
+  const { items: cart } = useSelector((state: RootState) => state.cart);
+  const dispatch = useDispatch();
+  const cartItems: ServiceItem[] = cart.map((item) => ({
+    _id: item._id,
+    name: item.title,
+    price: item.price,
+    quantity: item.quantity || 1, // Đảm bảo quantity luôn có giá trị
+  }));
 
   const updateTimeString = (hour: string, minute: string, period: string) => {
     if (hour && minute && period) {
@@ -34,8 +51,49 @@ export default function BookingForm() {
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (cartItems.length == 0) {
+      toast.error("Please add service to cart");
+      return;
+    }
+    if (!date || !time || !customer) {
+      toast.error("Please fill in required fields");
+      return;
+    }
+
+    const bookingData = {
+      customer,
+      services: cartItems,
+      date: date.toISOString().split("T")[0], // "2025-06-01"
+      time,
+      status: "pending",
+      amount: cart.reduce((total, item) => {
+        return total + item.price * (item.quantity || 1);
+      }, 0),
+      phone,
+      email,
+    };
+
+    try {
+      await createBooking(bookingData);
+      toast.success("Booking successfully created!");
+      // Reset form nếu muốn
+      dispatch(clearCart());
+      setCustomer("");
+      setDate(new Date());
+      setTime("");
+      setEmail("");
+      setPhone("");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to create booking");
+    }
+  };
+
   return (
-    <div className="w-full mx-auto p-6 bg-white ">
+    <form onSubmit={handleSubmit} className="w-full mx-auto p-6 bg-white ">
       <h1 className="text-4xl font-serif text-[#3c2415] mb-8">
         Your Information
       </h1>
@@ -60,7 +118,12 @@ export default function BookingForm() {
                 </button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0 z-20" align="start">
-                <DayPicker mode="single" selected={date} onSelect={setDate} />
+                <DayPicker
+                  mode="single"
+                  selected={date}
+                  onSelect={setDate}
+                  className="p-4"
+                />
               </PopoverContent>
             </Popover>
           </div>
@@ -170,6 +233,8 @@ export default function BookingForm() {
               id="customer"
               placeholder="Enter your name"
               className="h-12 bg-white"
+              value={customer}
+              onChange={(e) => setCustomer(e.target.value)}
             />
           </div>
 
@@ -180,6 +245,8 @@ export default function BookingForm() {
               type="email"
               placeholder="Enter your email"
               className="h-12 bg-white"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
@@ -190,6 +257,8 @@ export default function BookingForm() {
               type="tel"
               placeholder="Enter your phone number"
               className="h-12 bg-white"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
             />
           </div>
         </div>
@@ -207,8 +276,10 @@ export default function BookingForm() {
       </div>
 
       <div className="flex justify-end">
-        <Button className="px-8 py-6 text-lg ">Complete Booking</Button>
+        <Button className="px-8 py-6 text-lg " type="submit">
+          Complete Booking
+        </Button>
       </div>
-    </div>
+    </form>
   );
 }

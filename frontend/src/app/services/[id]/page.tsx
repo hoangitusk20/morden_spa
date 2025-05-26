@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { getRelatedService, getServiceDetail } from "@/lib/getServiceData";
 import ServiceCard from "@/shared/ServiceCard";
-import { Service } from "@/shared/type";
 import { ArrowLeft, Clock, DollarSign, ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
