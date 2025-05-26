@@ -1,7 +1,6 @@
 import { Booking } from "@/shared/type";
 
 export async function createBooking(booking: Booking): Promise<object> {
-  console.log("url from booking", process.env.NEXT_PUBLIC_API_URL);
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/booking`, {
     method: "POST",
     headers: {

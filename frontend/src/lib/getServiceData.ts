@@ -1,7 +1,6 @@
 import { Service } from "@/shared/type";
 
 export async function getServiceData(): Promise<Service[]> {
-  console.log("url from service ", process.env.NEXT_API_URL);
   const res = await fetch(`${process.env.NEXT_API_URL}/service`, {
     next: {
       revalidate: false,
