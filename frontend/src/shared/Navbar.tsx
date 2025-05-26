@@ -50,7 +50,11 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center relative">
-          <button onClick={() => setIsCartOpen(!isCartOpen)}>
+          <button
+            onClick={() => setIsCartOpen(!isCartOpen)}
+            aria-label="Open cart"
+            title="Open cart"
+          >
             <ShoppingCart className="mx-6" />
             {cartCount > 0 && (
               <span className="absolute -top-2 right-3 bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
@@ -63,10 +67,13 @@ const Navbar = () => {
           {/* Show menu on mobile */}
           <div className="md:hidden">
             <button
-              className="p-0  bg-white hover:bg-white"
+              className="p-0 bg-white hover:bg-white"
               onClick={() => setIsOpenMenu(!isOpenMenu)}
+              aria-label="Toggle menu"
+              title="Toggle menu"
             >
               <Menu className="absolute top-0.5" />
+              <span className="sr-only">Toggle Menu</span>
             </button>
           </div>
         </div>
