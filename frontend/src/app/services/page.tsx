@@ -3,6 +3,12 @@ import ServiceList from "./components/ServiceList";
 import { getServiceData } from "@/lib/getServiceData";
 
 const serviceData = await getServiceData();
+
+export const metadata = {
+  title: "Ngoc Spa - Our Services",
+  description:
+    "Explore our luxurious treatments designed to rejuvenate your body and mind.",
+};
 export default function ServicePage() {
   return (
     <div className="mt-20">

@@ -5,6 +5,12 @@ import ContactInfo from "./components/ContactInfo";
 import ContactForm from "./components/ContactForm";
 import Map from "./components/Map";
 
+export const metadata = {
+  title: "Ngoc Spa - Contact Us",
+  description:
+    "Get in touch with us for any inquiries or to book your next spa experience.",
+};
+
 export default function ContactPage() {
   return (
     <div className="mt-20">

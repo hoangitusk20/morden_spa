@@ -5,6 +5,12 @@ import Video from "./components/Video";
 import OurValues from "./components/OurValues";
 import Banner from "../../shared/Banner";
 
+export const metadata = {
+  title: "Ngoc Spa - About Us",
+  description:
+    "Learn about our story, values, and commitment to providing exceptional spa experiences.",
+};
+
 export default function AboutPage() {
   return (
     <div className="mt-20">

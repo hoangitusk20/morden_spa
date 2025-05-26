@@ -4,6 +4,12 @@ import BookingSummary from "./components/BookingSummary";
 import BookingForm from "./components/BookingForm";
 import { Suspense } from "react";
 
+export const metadata = {
+  title: "Ngoc Spa - Booking",
+  description:
+    "Complete your booking to secure your appointment at Ngoc Spa. Review your selected services and provide your information to finalize your booking.",
+};
+
 export default function Bookingpage() {
   return (
     <div className="my-20">

@@ -2,8 +2,34 @@ import { Button } from "@/components/ui/button";
 import { getRelatedService, getServiceDetail } from "@/lib/getServiceData";
 import ServiceCard from "@/shared/ServiceCard";
 import { ArrowLeft, Clock, DollarSign, ShoppingBag } from "lucide-react";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const service = await getServiceDetail(params.id);
+
+  if (!service) {
+    return {
+      title: "Service not found",
+      description: "The requested service could not be found.",
+    };
+  }
+
+  return {
+    title: service.title,
+    description: service.description || service.detailDescription,
+    openGraph: {
+      title: service.title,
+      description: service.description || service.detailDescription,
+      images: [service.image],
+    },
+  };
+}
 
 export default async function ServiceDetailPage({
   params,
