@@ -31,7 +31,7 @@ const ServicesTable: React.FC<ServicesTableProps> = ({
   const filteredServices = services.filter(
     (service) =>
       service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      service.category.toLowerCase().includes(searchTerm.toLowerCase())
+      service.category.includes(searchTerm.toUpperCase())
   );
 
   return (
@@ -69,7 +69,7 @@ const ServicesTable: React.FC<ServicesTableProps> = ({
                 <TableCell className="font-medium">{service.title}</TableCell>
                 <TableCell>
                   <Badge variant="outline" className="bg-primary/5">
-                    {service.category}
+                    {service.category.toLowerCase()}
                   </Badge>
                 </TableCell>
                 <TableCell>{service.duration}</TableCell>

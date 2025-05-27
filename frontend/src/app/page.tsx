@@ -11,9 +11,8 @@ export const metadata = {
     "Home page of Ngoc Spa, your destination for relaxation and rejuvenation in Cu Chi, Ho Chi Minh City.",
 };
 
-const serviceData = await getServiceData();
-
-export default function Home() {
+export default async function Home() {
+  const serviceData = await getServiceData();
   return (
     <div className="mt-20">
       <Hero />

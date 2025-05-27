@@ -3,7 +3,6 @@ import { Service } from "@/shared/type";
 export async function getServiceData(): Promise<Service[]> {
   const res = await fetch(`${process.env.NEXT_API_URL}/service`, {
     next: {
-      revalidate: false,
       tags: ["service-data"],
     },
   });
@@ -20,7 +19,6 @@ export async function getServiceData(): Promise<Service[]> {
 export async function getServiceDetail(id: string): Promise<Service> {
   const res = await fetch(`${process.env.NEXT_API_URL}/service/${id}`, {
     next: {
-      revalidate: false,
       tags: [`service-detail-${id}`],
     },
   });
@@ -36,7 +34,6 @@ export async function getServiceDetail(id: string): Promise<Service> {
 export async function getRelatedService(id: string): Promise<Service[]> {
   const res = await fetch(`${process.env.NEXT_API_URL}/service/${id}/related`, {
     next: {
-      revalidate: false,
       tags: [`related-service-${id}`],
     },
   });

@@ -33,6 +33,8 @@ import {
   selectServicesLoading,
   selectServicesError,
   selectCurrentService,
+  revalidateService,
+  revalidateRelatedService,
 } from "../redux/features/serviceSlice";
 
 const Services = () => {
@@ -112,7 +114,13 @@ const Services = () => {
           updateData.image = selectedFile;
         }
 
-        await dispatch(updateService(updateData)).unwrap();
+        await dispatch(updateService(updateData))
+          .unwrap()
+          .then(() => {
+            dispatch(revalidateService("service-data"));
+            dispatch(revalidateService(`service-detail-${currentService._id}`));
+            dispatch(revalidateRelatedService(currentService._id));
+          });
         toast.success("Cập nhật dịch vụ thành công");
       } else {
         // Thêm dịch vụ mới
@@ -126,7 +134,13 @@ const Services = () => {
             category: serviceData.category.toUpperCase(),
             image: selectedFile as File,
           })
-        ).unwrap();
+        )
+          .unwrap()
+          .then(() => {
+            dispatch(revalidateService("service-data"));
+            dispatch(revalidateService(`service-detail-${currentService._id}`));
+            dispatch(revalidateRelatedService(currentService._id));
+          });
         toast.success("Thêm dịch vụ mới thành công");
       }
       setIsFormOpen(false);
@@ -139,7 +153,12 @@ const Services = () => {
   const handleDelete = async () => {
     if (currentService?._id) {
       try {
-        await dispatch(deleteService(currentService._id)).unwrap();
+        await dispatch(deleteService(currentService._id))
+          .unwrap()
+          .then(() => {
+            dispatch(revalidateService("service-data"));
+            dispatch(revalidateService(`service-detail-${currentService._id}`));
+          });
         setIsDeleteDialogOpen(false);
         dispatch(setCurrentService(null));
         toast.success("Xóa dịch vụ thành công");

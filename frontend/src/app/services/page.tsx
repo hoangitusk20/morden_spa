@@ -2,14 +2,15 @@ import Banner from "@/shared/Banner";
 import ServiceList from "./components/ServiceList";
 import { getServiceData } from "@/lib/getServiceData";
 
-const serviceData = await getServiceData();
-
 export const metadata = {
   title: "Ngoc Spa - Our Services",
   description:
     "Explore our luxurious treatments designed to rejuvenate your body and mind.",
 };
-export default function ServicePage() {
+export default async function ServicePage() {
+  console.log("🔥 Rendering Service Page", new Date().toISOString());
+
+  const serviceData = await getServiceData();
   return (
     <div className="mt-20">
       <Banner

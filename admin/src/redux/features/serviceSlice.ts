@@ -36,7 +36,7 @@ export const fetchServices = createAsyncThunk(
         price: service.price,
         description: service.description,
         detailDescription: service.detailDescription,
-        category: service.category.toLowerCase(),
+        category: service.category,
         image: service.image,
       }));
     } catch (error) {
@@ -172,6 +172,58 @@ export const deleteService = createAsyncThunk(
   }
 );
 
+export const revalidateService = createAsyncThunk(
+  "services/revalidate",
+  async (tag: string, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${API_URL}/revalidate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          tag: tag,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Không thể revalidate");
+      }
+
+      return await response.json();
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error ? error.message : "Đã xảy ra lỗi khi revalidate"
+      );
+    }
+  }
+);
+
+export const revalidateRelatedService = createAsyncThunk(
+  "services/revalidateRelated",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${API_URL}/revalidate/related/${id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Không thể revalidate");
+      }
+
+      return await response.json();
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error ? error.message : "Đã xảy ra lỗi khi revalidate"
+      );
+    }
+  }
+);
+
 // Khởi tạo state ban đầu
 const initialState: ServiceState = {
   services: [],
@@ -259,6 +311,34 @@ const serviceSlice = createSlice({
         state.loading = false;
       })
       .addCase(deleteService.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // Xử lý revalidateService
+      .addCase(revalidateService.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(revalidateService.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null; // Xóa lỗi nếu có
+      })
+      .addCase(revalidateService.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // Xử lý revalidateRelatedService
+      .addCase(revalidateRelatedService.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(revalidateRelatedService.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null; // Xóa lỗi nếu có
+      })
+      .addCase(revalidateRelatedService.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
