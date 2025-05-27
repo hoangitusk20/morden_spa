@@ -1,24 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frontend - Modern Beauty Spa
+
+This is the customer-facing website for Modern Beauty Spa.
+
+## Features
+
+- **Homepage:** Modern, attractive landing page.
+- **Service Listing:** Browse all available spa services.
+- **Booking:** Book appointments online with real-time availability.
+- **About:** Learn more about the spa, staff, and values.
+- **Contact:** Contact form and map integration.
+- **SEO & Performance:** 100/100 PageSpeed Insights, optimized for search engines and fast loading.
+
+## Technology Stack
+
+- Next.js (TypeScript)
+- TailwindCSS
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit: [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Folder Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+/src
+  /app         # Next.js app directory (pages, layouts, routing)
+  /components  # Reusable UI components
+  /shared      # Shared utilities and types
+  /lib         # API and helper functions
+  /store       # State management (if any)
+```
+
+## Notes
+
+- Uses SSG, CSR, and on-demand revalidation for best performance and user experience.
+- Demo: [https://ngocspa.vercel.app/](https://ngocspa.vercel.app/)
 
 ## Learn More
 
