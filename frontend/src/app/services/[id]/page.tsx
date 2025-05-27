@@ -1,10 +1,27 @@
 import { Button } from "@/components/ui/button";
-import { getRelatedService, getServiceDetail } from "@/lib/getServiceData";
+import {
+  getRelatedService,
+  getServiceData,
+  getServiceDetail,
+} from "@/lib/getServiceData";
 import ServiceCard from "@/shared/ServiceCard";
 import { ArrowLeft, Clock, DollarSign, ShoppingBag } from "lucide-react";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+
+export async function generateStaticParams() {
+  try {
+    const services = await getServiceData();
+
+    return services.map((service: any) => ({
+      id: service._id.toString(),
+    }));
+  } catch (error) {
+    console.error("Error generating static params:", error);
+    return [];
+  }
+}
 
 export async function generateMetadata({
   params,
